@@ -6,7 +6,7 @@
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="styling.css">
-
+<link rel="stylesheet" href="animate.css">
 </head>
 
 
@@ -14,23 +14,27 @@
 <py-config>packages = ["numpy","Pillow","seaborn"]</py-config>
 <!-- <py-script src="./website_title.py"></py-script> -->
 <div class="jumbotron">
-    <p4 style="color:black">Welcome to <h1>Err<span style="color:limegreen" id ="zero"></span>r Correcti<span style="color:limegreen" id="two"></span>g Cod<span style="color:limegreen" id="one"></span>s</h1></p4>
+    <p4 style="color:black">Welcome to <h1>Err<span style="color:limegreen" id ="zero"></span>r Correcti<span style="color:limegreen" id="one"></span>g Cod<span style="color:limegreen" id="two"></span>s</h1></p4>
+    <p4 id="Title_text" style="visibility:hidden;color:black">Upload an image to get started:</p4>
+    <label style="visibility: hidden" for="Upload a PNG image" id="label"><input type="file" id="file-upload"></label>
+    <div id="output_upload"></div>
+    <div id="loading_ani"><div></div><div></div><div></div></div>
 </div>
 <div class="container">
     <div id="row1" class="row">
-        <h4 >Hamming Codes</h4>
-        <p2 class="lead">Hamming codes were invented by Richard Hamming in the 1950's. They allow you to extend the binary message by including information about the message bits in extra bits.
+        <h4 id="row1_1" style="visibility:hidden">Hamming Codes</h4>
+        <p2 id="row1_2" style="visibility:hidden">Hamming codes were invented by Richard Hamming in the 1950's. They allow you to extend the binary messages by including information about the message in extra bits, a bit being a 1 or 0.
             These extra bits are called parity bits. In the examples below, we will use a specific type of hamming code, the hamming (7,4). 
-            This means for every 4 bits encoded we will get back 7 bits with 3 parity bits included.</p2>
+            This means for every <span style="color:lightseagreen">4 message bits</span> encoded we will get back 7 bits, the extra being <span style="color:orange">3 parity bits</span>.</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row2" class="row">
-        <p2 class="lead">Try encoding some binary messages here. We use matrix multiplication with a <span style="color:crimson">generator matrix</span> here:</p2>
+        <p2 id="row2_1" style="visibility:hidden">We use matrix multiplication with a specific matrix called a <span style="color:crimson">generator matrix</span> to encode binary messages. Try encoding some binary messages with it:</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div class = "row" style="margin-left:50px;">
         <div class="col-sm-1">
-            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson" class="matrix" id="G">
+            <table style="visibility: hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson" class="matrix" id="matrix1_1">
                 <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
                 <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
                 <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
@@ -40,9 +44,9 @@
                 <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
             </table>
         </div>
-        <p style="font-weight: bold;margin-left: 45px;margin-right: 15px;margin-top: 130px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#xD7;</p>
+        <p id="matrix1_2" style="visibility: hidden;font-weight: bold;margin-left: 45px;margin-right: 15px;margin-top: 130px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#xD7;</p>
         <div class="col-sm-2" style="top: 50px;">
-            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix">
+            <table style="visibility: hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="matrix1_3">
                 <tr><td><select style="color:lightseagreen" id="int1">
                     <option value=0>0</option>
                     <option value=1>1</option>
@@ -100,7 +104,7 @@
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row3" class="row">
-        <p2 class="lead">The outcome of the matrix multiplication is not always enough because sometimes the output has a 2 or 3 which is not binary. When this happens, we apply the 
+        <p2 style="visibility:hidden" id="row3_1">The outcome of the matrix multiplication is not always enough because sometimes the output has a 2 or 3 which is not binary. When this happens, we apply the 
             rules of a finite field, specifically GF(2). This basically means we take the remainder of each element after we
             divide by two. This allows our result to stay binary. Try different combinations to see how the finite field is applied.</p2>
     </div>
@@ -108,31 +112,32 @@
 </div>
 <div class="container">
     <div id="row4" class="row">
-        <p2 class="lead">Now lets encode a binary image. Like the last step from above, we can organise the parity bits to be at the end of the message, or for an image to the very right. What do you think it will look like?</p2>
+        <p2 style="visibility:hidden" id="row4_1">Now lets encode a binary image. Like the last step from above, we can organise the parity bits to be at the end of the message, or for an image to the very right. What do you think it will look like?</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="output_upload_hamming">
-        <!-- do a button here to reveal image? -->
+        <button style="visibility: hidden;" type="button" id="button1">Display Image</button>
     </div>
 </div>
 <div class="container">
     <p style="visibility:hidden">Some random text</p>
-    <div id="row2" class="row">
-        <p2 class="lead">The point of encoding is to correct errors.  We use matrix multiplication with a <span style="color:crimson">syndrome matrix</span> here:</p2>
+    <div id="row5" class="row">
+        <p2 id="row5_1" style="visibility: hidden;">The point of encoding is to correct errors. We use matrix multiplication with a <span style="color:crimson">syndrome matrix</span> to calculate a binary number 
+            that tells us the place where the error has occured. Try testing it out by adding errors to the encoded 7 bit message from above:</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <p3 style="visibility:hidden">Some random text</p3>
     <div class = "row" style="margin-left: 50px;margin-top: 90px">
         <div class="col-sm-1">
-            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson" class="matrix" id="G">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson;visibility: hidden;" class="matrix" id="matrix4_1">
                 <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
                 <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
                 <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
             </table>
         </div>
-        <p style="font-weight: bold;margin-top:45px;margin-left:105px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#xD7;</p>
+        <p id="matrix4_2" style="font-weight: bold;margin-top:45px;margin-left:105px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#xD7;</p>
         <div class="col-sm-2">  
-            <table style="margin-top:-100px;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output5">
+            <table style="margin-top:-100px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix4_3">
                 <tr><td id = 'out_c_1'></td><td><select id="flip1"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
                 <tr><td id = 'out_c_2'></td><td><select id="flip2"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
                 <tr><td id = 'out_c_3'></td><td><select id="flip3"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
@@ -142,30 +147,30 @@
                 <tr><td id = 'out_c_7'></td><td><select id="flip7"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
             </table>
         </div>
-        <p id="equals1" style="font-weight: bold;margin-top:45px;margin-left:-20px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">=</p>
+        <p id="matrix5_1" style="font-weight: bold;margin-top:45px;margin-left:-20px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">=</p>
         <div class="col-sm-3">
-            <table style="color:aquamarine;margin-left:30px;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output">
+            <table style="color:aquamarine;margin-left:30px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix5_2">
                 <tr><td style="color:purple" id = 'syn1'></td></tr>
                 <tr><td style="color:purple" id = 'syn2'></td></tr>
                 <tr><td style="color:purple" id = 'syn3'></td></tr>
             </table>
         </div>
-        <p id="equals1" style="font-weight: bold;margin-top:45px;margin-left:-140px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#8594;</p>
+        <p id="matrix5_3" style="font-weight: bold;margin-top:45px;margin-left:-140px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#8594;</p>
         <div class="col-sm-4">
-            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output3">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix5_4">
                 <tr><td style="color:purple" id = 'syn_b_1'></td><td style="color:purple" id = 'syn_b_2'></td><td style="color:purple" id = 'syn_b_3'></td></tr>
-                <p id="decimal" style="font-size: x-large;font-family: 'Times New Roman', Times, serif;margin-left:27px"></p>
+                <p id="decimal" style="font-size: x-large;font-family: 'Times New Roman', Times, serif;margin-left:27px;visibility: hidden;"></p>
             </table>
         </div>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row6" class="row">
-        <p2 class="lead">Knowing the place of the error, we can flip the bit. Then deconstruct back the orginal message.</p2>
+        <p2 id="row6_1" style="visibility: hidden;">Knowing the place of the error, we can flip the bit. Then deconstruct back the orginal message. Its downside is how many errors it can correct, you can see with multiple errors, it loses its correction capabilities.</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row7" class="row">
         <div class="col-sm-1">
-            <table style="margin-left:200px;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output7">
+            <table style="margin-left:200px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix6_1">
                 <tr><td style="color:orange" id='cor_1'></td></tr>
                 <tr><td style="color:orange" id='cor_2'></td></tr>
                 <tr><td style="color:lightseagreen" id='cor_3'></td></tr>
@@ -175,9 +180,9 @@
                 <tr><td style="color:lightseagreen" id='cor_7'></td></tr>
             </table>
         </div>
-        <p id="equals3" style="margin-left:230px;margin-right: 20px;;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#8594;</p>
+        <p id="matrix6_2" style="margin-left:230px;margin-right: 20px;;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#8594;</p>
         <div class="col-sm-2" style="margin-left:50px;top: 50px;">
-            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix6_3">
                 <tr><td style="color:lightseagreen" id="final1"></td></tr>
                 <tr><td style="color:lightseagreen" id="final2"></td></tr>
                 <tr><td style="color:lightseagreen" id="final3"></td></tr>
@@ -188,8 +193,8 @@
 </div>
 <div class="container">
     <p style="visibility:hidden;">Some random text</p>
-    <div id="row5" class="row">
-        <p2 class="lead">You can adjust the noise level here:
+    <div id="row8" class="row">
+        <p2 id="row8_1" style="visibility: hidden;">Now lets try it with an image. Interact with the noise to load the images:
             <select class="form_control" id="selection_box1">
                 <option value=1>0.25%</option>
                 <option value=2>0.5%</option>
@@ -199,55 +204,72 @@
             </select>
         </p2>
     </div>
+    <p style="visibility:hidden;">Some random text</p>
     <div id="output_upload_noise"></div>
     <p style="visibility:hidden;">Some random text</p>
     <div  id="output_upload_noisy_image"></div>
     <p style="visibility:hidden;">Some random text</p>
-    <p2 class="lead">You can see how much error it can correct and how much still gets through. Take note, the level of noise that can get through.</p2> 
     <div  id="output_upload_corrected"></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row9" class="row">
+        <p2 id="row9_1" style="visibility: hidden;">You can see how much error it can correct and how much still gets through. Take note, the level of noise that can get through.</p2> 
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
 </div>
 <div class="container">
-    <h4 >Reed Solomon Codes</h4>
-    <p2 class="lead">If we want to correct more errors we need Reed Solomon Codes. These are much more useful 
-        and have practical use in communications and DVD's. In the Reed Solomon codes below, 8 bits are collected 
-        together to make up a symbol that can be encoded in a similar process.</p2>
+    <div id="row10" class="row">
+        <h4 id="row10_1" style="visibility: hidden;">Reed Solomon Codes</h4>
+        <p2 id="row10_2" style="visibility: hidden;">Hamming Codes are limited to binary messages and single bit error correction. If the aim is to correct more errors we can use Reed Solomon Codes. In the Reed Solomon codes below, 8 bits are collected 
+            together to make up a symbol that can be encoded in a similar process. Because the symbols are 8 bits (a byte) the finite field will be GF(2^8). Another process Reed Solomon does different is encoding and decoding. 
+            Previously, linear algebra (matrices) was used for encoding and decoding. Instead, we will be using is polynomial mathematics.</p2>
+        <p style="visibility:hidden;">Some random text</p>
+        <p2 id="row10_3" style="visibility: hidden;color:orange">Currently working on interactive reed solomon section, however the image stuff below still works. If it doesn't work initially, it is still loading in the backround.</p2>
+        <!-- <p2 id="row10_3" style="visibility: hidden;">Try inputting an array to encode like this: <span style="color:lightseagreen">233,144,67,97,255</span> </p2>
+        <input type="text" id="test-input"/>
+        <button id="submit-button" type="submit" pys-onClick="my_function">OK</button> -->
+    </div>
     <p style="visibility:hidden;">Some random text</p>
-    <p2 class="lead">Here we can extend the image to include more parity bytes:
-        <select class="form_control" id="selection_box2">
-            <option value=1>(9,5)</option>
-            <option value=3>(17,5)</option> 
-            <option value=5>(25,5)</option>
-            <option value=7>(33,5)</option> 
-            <option value=9>(41,5)</option> 
-        </select>
-    </p2>
+    <!-- <div id="row14" class="row">
+        <p2 id="row14_2" style="visibility: hidden;color:lightseagreen"></p2>
+        <p style="visibility:hidden;">Some random text</p>
+        <p2 id="row14_3" style="visibility: hidden;"></p2>
+    </div> -->
+    <!-- <p style="visibility:hidden;">Some random text</p> -->
+    <div id="row11" class="row">
+        <p2 id="row11_1" style="visibility: hidden;">Here we can extend the image to include more parity bytes:
+            <select class="form_control" id="selection_box2">
+                <option value=1>(9,5)</option>
+                <option value=3>(17,5)</option> 
+                <option value=5>(25,5)</option>
+                <option value=7>(33,5)</option> 
+                <option value=9>(41,5)</option> 
+            </select>
+        </p2>
+    </div>
     <div id="reed_s"></div>
-    <p2 class="lead">Choose the noise level here:
-        <select class="form_control" id="selection_box3">
-            <option value=0.5>0.25%</option>
-            <option value=1>0.5%</option>
-            <option value=2>1.0%</option>
-            <option value=3>1.5%</option> 
-            <option value=4>2.0%</option>
-        </select>
-    </p2>
+    <div id="row12" class="row">
+        <p2 id="row12_1" style="visibility: hidden;">Choose the noise level here:
+            <select class="form_control" id="selection_box3">
+                <option value=0.5>0.25%</option>
+                <option value=1>0.5%</option>
+                <option value=2>1.0%</option>
+                <option value=3>1.5%</option> 
+                <option value=4>2.0%</option>
+            </select>
+        </p2>
+    </div>
     <div id="noisy_2"></div>
     <p style="visibility:hidden">Some random text</p>
     <div id="noisy_image_2"></div>
     <p style="visibility:hidden">Some random text</p>
-    <p2 class="lead">After error correction the image looks like this</p2>
+    <div id="row13" class="row">
+        <p2 id="row13_1" style="visibility: hidden;">After error correction the image looks like this:</p2>
+    </div>  
     <div id="corrected_2"></div>
+    <p style="visibility:hidden">Some random text</p>
 </div>
 <div class="jumbotron">
-    <p4 style="color:black">Want to try it with your own image?</p4>
-    <p4 style="color:black">Upload an image, please be patient, it take a few minutes to load</p4>
-    <label for="Upload a PNG image"><input type="file" id="file-upload"></label>
-    <div class="row">
-        <div id="output_upload"></div>
-        <div id="loading_ani"><div></div><div></div><div></div></div>
-    </div>
     <py-script src="./widget.py"></py-script>
 </div>
-
 </body>
 </html>

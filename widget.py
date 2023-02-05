@@ -1,9 +1,9 @@
 import numpy as np
 from PIL import Image
-from js import document, console, Uint8Array, window, File, setInterval
-from pyodide.ffi import create_proxy
+from js import document, console, Uint8Array, window, File, setInterval, setTimeout, clearInterval
+from pyodide.ffi import create_proxy, create_once_callable
 import base64
-import pyodide
+# import pyodide
 import asyncio
 import io
 import json
@@ -23,43 +23,93 @@ import pandas as pd
 
 #Note: Functions for use in final product
 
-window.sessionStorage.setItem("key",json.dumps("1"))
-console.log(str(json.loads(window.sessionStorage.getItem("key"))))
+window.sessionStorage.setItem("key1",json.dumps("1"))
+# console.log(str(json.loads(window.sessionStorage.getItem("key1"))))
+window.sessionStorage.setItem("key2",json.dumps("1"))
+window.sessionStorage.setItem("key3",json.dumps("1"))
 
-
-def callback():
-    variable = json.loads(window.sessionStorage.getItem("key"))
-    if variable == "1":
-        Element("zero").write("e")
-        Element("one").write("o")
-        Element("two").write("n")
-        variable = json.dumps("2")
-        window.sessionStorage.setItem("key",variable)
-
-    elif variable == "2":
-        Element("zero").write("o")
-        Element("one").write("n")
-        Element("two").write("e")
-        variable = json.dumps("3")
-        window.sessionStorage.setItem("key",variable)
-    else:
+def callback1():
+    variable1 = json.loads(window.sessionStorage.getItem("key1"))
+    if variable1 == "1":
+        Element("zero").write("o")       
+        variable1 = json.dumps("2")
+        window.sessionStorage.setItem("key1",variable1)
+    elif variable1 == "2":
         Element("zero").write("n")
+        variable1 = json.dumps("3")
+        window.sessionStorage.setItem("key1",variable1)
+    else:
+        Element("zero").write("e")
+        variable1 = json.dumps("1")
+        window.sessionStorage.setItem("key1",variable1)
+
+def callback2():
+    variable2 = json.loads(window.sessionStorage.getItem("key2"))
+    if variable2 == "1":
+        Element("one").write("o")       
+        variable2 = json.dumps("2")
+        window.sessionStorage.setItem("key2",variable2)
+    elif variable2 == "2":
+        Element("one").write("n")
+        variable2 = json.dumps("3")
+        window.sessionStorage.setItem("key2",variable2)
+    else:
         Element("one").write("e")
-        Element("two").write("o")
-        variable = json.dumps("1")
-        window.sessionStorage.setItem("key",variable)
+        variable2 = json.dumps("1")
+        window.sessionStorage.setItem("key2",variable2)
 
+def callback3():
+    variable3 = json.loads(window.sessionStorage.getItem("key3"))
+    if variable3 == "1":
+        Element("two").write("o")       
+        variable3 = json.dumps("2")
+        window.sessionStorage.setItem("key3",variable3)
+    elif variable3 == "2":
+        Element("two").write("n")
+        variable3 = json.dumps("3")
+        window.sessionStorage.setItem("key3",variable3)
+    else:
+        Element("two").write("e")
+        variable3 = json.dumps("1")
+        window.sessionStorage.setItem("key3",variable3)
 
-setInterval(create_proxy(callback), 150)
+async def text_appear(id):
+    document.getElementById(id).style.visibility="visible"
+    document.getElementById(id).className="animate glow"
+    await asyncio.sleep(0)
+    
+
+def callback4():
+    asyncio.ensure_future(text_appear('Title_text'))
+    asyncio.ensure_future(text_appear('label'))
+
+def callback5():
+    Element("zero").write("o")
+
+def callback6():
+    Element("one").write("n")
+
+def callback7():
+    Element("two").write("e")
+    
+
+setInterval_1 = setInterval(create_proxy(callback1), 75)
+setInterval_2 = setInterval(create_proxy(callback2), 100)
+setInterval_3 = setInterval(create_proxy(callback3), 125)
+_1 = setTimeout(create_once_callable(lambda: clearInterval(setInterval_1)),3900)
+_2 = setTimeout(create_once_callable(lambda: clearInterval(setInterval_2)),5300)
+_3 = setTimeout(create_once_callable(lambda: clearInterval(setInterval_3)),6750)
+_4 = setTimeout(create_proxy(callback5),4000)
+_5 = setTimeout(create_proxy(callback6),5400)
+_6 = setTimeout(create_proxy(callback7),6900)
+_7 = setTimeout(create_proxy(callback4),7000)
 
 def loading(nothing):
     document.getElementById("loading_ani").classList.add('lds-facebook')
 
 upload_file = create_proxy(loading)
 document.getElementById("file-upload").addEventListener("change", upload_file)
-
-
-print("website_title loaded")
+# print("website_title loaded")
 
 class ReedSolomonError(Exception):
     pass
@@ -635,6 +685,7 @@ def rs_correct_msg(msg_in, nsym, erase_pos=None):
     '''Reed-Solomon main decoding function'''
     if len(msg_in) > 255:  # can't decode, message is too big
         raise ValueError("Message is too long (%i when max is 255)" % len(msg_in))
+        
 
     msg_out = list(msg_in)  # copy of message
     # erasures: set them to null bytes for easier decoding (but this is not necessary, they will be corrected anyway, but debugging will be easier with null bytes because the error locator polynomial values will only depend on the errors locations, not their values)
@@ -868,6 +919,7 @@ def display_stored_image(key,id, sess='on'):
     new_image.src = window.URL.createObjectURL(image_file)
     document.getElementById(id).innerHTML = ""
     document.getElementById(id).appendChild(new_image)
+    document.getElementById(id).className="animate"
     
 def display_image(image,id):
     my_stream = io.BytesIO()
@@ -879,13 +931,16 @@ def display_image(image,id):
     new_image = document.createElement('img')
     new_image.src = window.URL.createObjectURL(image_file)
     document.getElementById(id).appendChild(new_image)
+    document.getElementById(id).className="animate"
 
 async def hamming(e):
     #Get the first file from upload
     file_list = e.target.files
     first_item = file_list.item(0)
     #print(first_item)
-    
+
+    #Switch statements
+    # await set_switch("switch1","on")
     #Get the data from the files arrayBuffer as an array of unsigned bytes
     array_buf = Uint8Array.new(await first_item.arrayBuffer())
     #print(array_buf)
@@ -915,7 +970,8 @@ async def hamming(e):
     hamming_img = await img_encode(new_image,4)
     hamming_img = await seperate_img_hamming(hamming_img)
     await store_image(hamming_img,"ham")
-    display_stored_image("ham","output_upload_hamming")
+    output_text(1,2)
+    # display_stored_image("ham","output_upload_hamming")
     console.log('step two')
     #For 0.25%
     i = 1
@@ -923,11 +979,13 @@ async def hamming(e):
     await store_image(noise,"noise_"+str(i))
     noisy_image = convertFinite(hamming_img + noise,2)
     await store_image(noisy_image,"ham_n_"+str(i))
+    output_text(2,1)
     for_correction = await rejoin_img_hamming(noisy_image)
     correction = await correct_img_hamming(for_correction)
     correction_sep = await seperate_img_hamming(correction)
     await store_image(correction_sep,"final_"+str(i))
     #the rest
+    output_matrix(1,3)
     for i in range(2,10,2):
         noise = await generate_noisy_image(i,hamming_img)
         await store_image(noise,"noise_"+str(i))
@@ -938,10 +996,10 @@ async def hamming(e):
         correction_sep = await seperate_img_hamming(correction)
         await store_image(correction_sep,"final_"+str(i))
     console.log('first loop completed')
-    # choice = document.getElementById("selection_box1").value
-    # display_stored_image("noise_"+str(choice),"output_upload_noise")
-    # display_stored_image("ham_n_"+str(choice),"output_upload_noisy_image")
-    # display_stored_image("final_"+str(choice),"output_upload_corrected")
+    #choice = document.getElementById("selection_box1").value
+    #display_stored_image("noise_"+str(choice),"output_upload_noise")
+    #display_stored_image("ham_n_"+str(choice),"output_upload_noisy_image")
+    #display_stored_image("final_"+str(choice),"output_upload_corrected")
     rs_image = await imageToBinary(rs_image)
     for i in range(1,11,2):
         num = i
@@ -1008,6 +1066,10 @@ def selectChange(event):
     display_stored_image("noise_"+str(choice),"output_upload_noise")
     display_stored_image("ham_n_"+str(choice),"output_upload_noisy_image")
     display_stored_image("final_"+str(choice),"output_upload_corrected")
+    if document.getElementById('row10_1').style.visibility == 'hidden':
+        output_text(9,1)
+        output_text(10,3)
+        output_text(11,1)
 
 def selectChange2(event):
     error_c = document.getElementById("selection_box2").value
@@ -1016,6 +1078,8 @@ def selectChange2(event):
     display_stored_image("noisy_"+str(error_c)+str(noise_level),"noisy_2",sess='off')
     display_stored_image("rs_noisy_"+str(error_c)+str(noise_level),"noisy_image_2",sess='off')
     display_stored_image("rs_corr_"+str(error_c)+str(noise_level),"corrected_2",sess='off')
+    if document.getElementById('row12_1').style.visibility == 'hidden':
+        output_text(12,1)    
 
 def selectChange3(event):
     error_c = document.getElementById("selection_box2").value
@@ -1028,25 +1092,36 @@ def selectChange3(event):
 
 # Create a JsProxy for the callback function
 change_proxy = create_proxy(selectChange)
-e = document.getElementById("selection_box1")
-e.addEventListener("change", change_proxy)
-
+document.getElementById("selection_box1").addEventListener("change", change_proxy)
 change_proxy2 = create_proxy(selectChange2)
-f = document.getElementById("selection_box2")
-f.addEventListener("change", change_proxy2)
-
+document.getElementById("selection_box2").addEventListener("change", change_proxy2)
 change_proxy3 = create_proxy(selectChange3)
-g = document.getElementById("selection_box3")
-g.addEventListener("change", change_proxy3)
+document.getElementById("selection_box3").addEventListener("change", change_proxy3)
+
+async def set_switch(key,text):
+    await asyncio.sleep(0) 
+    window.sessionStorage.setItem(key,json.dumps(text)) 
+    
+def change_switch(key):
+    if json.loads(window.sessionStorage.getItem(key)) == "on":
+        asyncio.ensure_future(set_switch(key,"off"))
+        return 0
+    else:
+        return 1
+
 
 #Function for interactive hamming
 def selectChange_int_ham(event, G=G):
-    document.getElementById('output').style.visibility='visible'
-    document.getElementById('output2').style.visibility='visible'
-    document.getElementById('equals1').style.visibility='visible'
-    document.getElementById('equals2').style.visibility='visible'
-    document.getElementById('output3').style.visibility='visible'
-    document.getElementById('equals3').style.visibility='visible'
+    if document.getElementById('output').style.visibility == 'hidden':
+        output_text(3,1)
+        output_text(4,1)
+        document.getElementById('output').style.visibility='visible'
+        document.getElementById('output2').style.visibility='visible'
+        document.getElementById('equals1').style.visibility='visible'
+        document.getElementById('equals2').style.visibility='visible'
+        document.getElementById('output3').style.visibility='visible'
+        document.getElementById('equals3').style.visibility='visible'
+        document.getElementById('button1').style.visibility='visible'
     int1 = document.getElementById("int1").value
     int2 = document.getElementById("int2").value
     int3 = document.getElementById("int3").value
@@ -1070,6 +1145,12 @@ def selectChange_int_ham(event, G=G):
         if flip == 1:
             incorrect[i] = 1 - incorrect[i]
             document.getElementById("out_c_"+str(i+1)).style.color='red'
+            if document.getElementById('matrix5_1').style.visibility == 'hidden':
+                output_text(6,1)
+                output_matrix(5,4)
+                output_matrix(6,3)
+                output_text(8,1)
+                document.getElementById('decimal').style.visibility = 'visible'
     syndrome = np.matmul(H,incorrect)
     fin_syndrome = convertFinite(syndrome,2)
     fin_syndrome2 = np.zeros(3)
@@ -1083,7 +1164,7 @@ def selectChange_int_ham(event, G=G):
         else:
             correct[decimal - 1] = 0
     final = [correct[2],correct[4],correct[5],correct[6]]
-
+    #Write text
     for i in range(0,len(finite)):
         Element('out_b4_'+str(i+1)).write(str(encoded_int[i]))
         Element('out'+str(i+1)).write(str(finite[i]))
@@ -1095,13 +1176,7 @@ def selectChange_int_ham(event, G=G):
         Element('syn_b_'+str(i+1)).write(str(int(fin_syndrome2[i])))
     for i in range(0,4):
         Element('final'+str(i+1)).write(str(final[i]))
-    Element('decimal').write(str(decimal))
-    
-
-    
-
-
-    
+    Element('decimal').write(str(decimal))  
 
 
 #Create proxies for interactive hamming
@@ -1117,6 +1192,25 @@ document.getElementById("flip4").addEventListener("change", change_proxy_int1)
 document.getElementById("flip5").addEventListener("change", change_proxy_int1)
 document.getElementById("flip6").addEventListener("change", change_proxy_int1)
 document.getElementById("flip7").addEventListener("change", change_proxy_int1)
+
+
+def button_callback1(event):
+    display_stored_image("ham","output_upload_hamming")
+    output_text(5,1)
+    output_matrix(4,3)
+
+document.getElementById("button1").addEventListener("click", create_proxy(button_callback1))
+
+def output_text(row,num):
+    for i in range(0,num):
+        document.getElementById('row'+str(row)+'_'+str(i+1)).style.visibility='visible'
+        document.getElementById('row'+str(row)+'_'+str(i+1)).className='animate glow'
+
+def output_matrix(row,num):
+    for i in range(0,num):  
+        document.getElementById('matrix'+str(row)+'_'+str(i+1)).style.visibility='visible'
+
+
 # async def main()7
 #     while True7
 
@@ -1126,13 +1220,8 @@ document.getElementById("flip7").addEventListener("change", change_proxy_int1)
 #         callback()
 #         hamming()
 #         await asyncio.sleep(0)
-
 # asyncio.create_task(main())
-
-
-
 # pyscript.create_task(main())
-
 console.log("default script completed")
 
 
