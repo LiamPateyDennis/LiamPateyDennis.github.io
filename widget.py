@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 from js import document, console, Uint8Array, window, File, setInterval, setTimeout, clearInterval
 from pyodide.ffi import create_proxy, create_once_callable
+import pyodide.ffi.wrappers as wrappers
 import base64
 # import pyodide
 import asyncio
@@ -9,6 +10,7 @@ import io
 import json
 import random
 import pandas as pd
+from html import unescape, escape
 #import panel as pn  
 
 # from bokeh import __version__
@@ -82,6 +84,7 @@ async def text_appear(id):
 def callback4():
     asyncio.ensure_future(text_appear('Title_text'))
     asyncio.ensure_future(text_appear('label'))
+    asyncio.ensure_future(text_appear('Title_text2'))
 
 def callback5():
     Element("zero").write("o")
@@ -297,7 +300,6 @@ async def correct_img_hamming(img):
 
 
 
-
 gf_exp = [0] * 512 #    Create list of 512 elements. In Python 2.6+, consider using bytearray
 gf_log = [0] * 256
 
@@ -376,6 +378,8 @@ def init_tables(prim=0x11d):
     for i in range(255, 512):
         gf_exp[i] = gf_exp[i - 255]
     return [gf_log, gf_exp]
+
+init_tables()
 
 def gf_add(x, y):
     return x ^ y
@@ -718,7 +722,7 @@ def rs_correct_msg(msg_in, nsym, erase_pos=None):
                 erase_pos + err_pos))  # note that we here use the original syndrome, not the forney syndrome
     # (because we will correct both errors and erasures, so we need the full syndrome)
     # check if the final message is fully repaired
-    synd = rs_calc_syndromes(msg_out, nsym)
+    # synd = rs_calc_syndromes(msg_out, nsym)
     # if max(synd) > 0:
     #     raise ReedSolomonError("Could not correct message")  # message could not be repaired
     # return the successfully decoded message
@@ -996,10 +1000,6 @@ async def hamming(e):
         correction_sep = await seperate_img_hamming(correction)
         await store_image(correction_sep,"final_"+str(i))
     console.log('first loop completed')
-    #choice = document.getElementById("selection_box1").value
-    #display_stored_image("noise_"+str(choice),"output_upload_noise")
-    #display_stored_image("ham_n_"+str(choice),"output_upload_noisy_image")
-    #display_stored_image("final_"+str(choice),"output_upload_corrected")
     rs_image = await imageToBinary(rs_image)
     for i in range(1,11,2):
         num = i
@@ -1079,7 +1079,7 @@ def selectChange2(event):
     display_stored_image("rs_noisy_"+str(error_c)+str(noise_level),"noisy_image_2",sess='off')
     display_stored_image("rs_corr_"+str(error_c)+str(noise_level),"corrected_2",sess='off')
     if document.getElementById('row12_1').style.visibility == 'hidden':
-        output_text(12,1)    
+        output_text(12,2)    
 
 def selectChange3(event):
     error_c = document.getElementById("selection_box2").value
@@ -1201,6 +1201,194 @@ def button_callback1(event):
 
 document.getElementById("button1").addEventListener("click", create_proxy(button_callback1))
 
+superscript_map = {
+    "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶",
+    "7": "⁷", "8": "⁸", "9": "⁹","10": "¹⁰","11": "¹¹","12": "¹²","13": "¹³","14": "¹⁴",
+    "15": "¹⁵","16": "¹⁶","17": "¹⁷","18": "¹⁸","19": "¹⁹","20": "²⁰",
+    "a": "ᵃ", "b": "ᵇ", "c": "ᶜ", "d": "ᵈ",
+    "e": "ᵉ", "f": "ᶠ", "g": "ᵍ", "h": "ʰ", "i": "ᶦ", "j": "ʲ", "k": "ᵏ",
+    "l": "ˡ", "m": "ᵐ", "n": "ⁿ", "o": "ᵒ", "p": "ᵖ", "q": "۹", "r": "ʳ",
+    "s": "ˢ", "t": "ᵗ", "u": "ᵘ", "v": "ᵛ", "w": "ʷ", "x": "ˣ", "y": "ʸ",
+    "z": "ᶻ", "A": "ᴬ", "B": "ᴮ", "C": "ᶜ", "D": "ᴰ", "E": "ᴱ", "F": "ᶠ",
+    "G": "ᴳ", "H": "ᴴ", "I": "ᴵ", "J": "ᴶ", "K": "ᴷ", "L": "ᴸ", "M": "ᴹ",
+    "N": "ᴺ", "O": "ᴼ", "P": "ᴾ", "Q": "Q", "R": "ᴿ", "S": "ˢ", "T": "ᵀ",
+    "U": "ᵁ", "V": "ⱽ", "W": "ᵂ", "X": "ˣ", "Y": "ʸ", "Z": "ᶻ", "+": "⁺",
+    "-": "⁻", "=": "⁼", "(": "⁽", ")": "⁾"}
+
+
+
+def error_bytes(event, button_p = "no", map=superscript_map, array_but="id"):
+    if document.getElementById("gen_pol1").style.visibility == "hidden":
+        document.getElementById("gen_pol1").style.visibility = "visible"
+        document.getElementById("gen_pol2").style.visibility = "visible"
+        output_text(10,5)
+        output_text(14,2)
+    parity = document.getElementById("error_bytes").value
+    console.log("inside error_bytes")
+    Element("bytes_1").write(str(parity))
+    mes_len = int(parity) + 5
+    Element("bytes_2").write("("+str(mes_len)+","+str(5)+")")
+    string = "(x &#43; 1) "
+    for i in range(1, int(parity)):
+        power = gf_pow(2, i)
+        string += "&#8901; "
+        string += "(x &#43; " + str(power) + ") "
+    Element("gen_pol1").write(unescape(string))
+    # init_tables()
+    gen = rs_generator_poly(int(parity))
+    string2 = "G(x) =   x" + map[str(len(gen)-1)] + " + "
+    for i in range(1,len(gen)-1):
+        string2 += str(gen[i])
+        if gen[i] == 0:
+            string2 += ""
+        if len(gen)-1-i == 1:
+            string2 += "x" + " + "
+        else:
+            string2 += "x" + map[str(len(gen)-1-i)] + " + "
+    string2 += str(gen[-1])
+    Element("gen_pol2").write(string2)
+    console.log(str(Element("rs_mes")))
+    if button_p == "yes":
+        int_array = []
+        for i in range(0,5):
+            int_array.append(random.randrange(0,255,1))
+        Element("rs_mes").write(str(int_array))
+        document.getElementById("switch1").style.color = "red"
+        window.sessionStorage.setItem("string3",json.dumps(str(int_array)))
+    string_list = json.loads(window.sessionStorage.getItem("string3"))
+    list_ = string_list.strip("][").split(", ")
+    int_array1 = [int(i) for i in list_]
+    int_array = int_array1 + [0] * (len(gen)-1)
+    string3 = "M(x) =   "
+    for i in range(0,5):
+        string3 += str(int_array[i])
+        # console.log(string3)
+        if len(int_array)-1-i == 1:
+            string3 += "x" + " + "
+            # console.log(string3)
+        else:
+            string3 += "x" + map[str(len(int_array)-1-i)] + " + "
+            # console.log(string3)
+    string3 = string3[:-3]
+    Element("rs_mes2").write(string3)
+    _,remainder = gf_poly_div(int_array,gen)
+    string4 = "R(x) =   "
+    for i in range(0,len(remainder)):
+        string4 += str(remainder[i])
+        # console.log(string4)
+        if len(remainder)-1-i == 0:
+            string4 += " + "
+        elif len(remainder)-1-i == 1:
+            string4 += "x" + " + "
+            # console.log(string4)
+        else:
+            string4 += "x" + map[str(len(remainder)-1-i)] + " + "
+            # console.log(string4)
+    string4 = string4[:-3]
+    Element("remainder").write(string4)
+    enc_msg = int_array1+remainder
+    # console.log(document.getElementById("switch1").style.color)
+    new_msg = enc_msg
+    col_msg = [0]*len(enc_msg)
+    Element("enc_mes").write(str(enc_msg))
+    for i in range(0,len(enc_msg)):
+        if "enc_msg_"+str(i) == array_but:
+            if document.getElementById("row18_1").style.visibility == "hidden":
+                output_text(18,4)
+                output_text(11,1)
+                output_text(17,1)
+                document.getElementById("fourney_syn").style.visibility = "visible"
+                document.getElementById("BM_loc").style.visibility = "visible"
+                document.getElementById("err_pos").style.visibility = "visible"
+                document.getElementById("final_mes").style.visibility = "visible"
+            if document.getElementById("switch1").style.color == "red":
+                document.getElementById("switch1").style.color = ""
+                new_msg = enc_msg
+                col_msg = [0]*len(enc_msg)
+            else:
+                string_list_ = json.loads(window.sessionStorage.getItem("string4"))
+                _list_ = string_list_.strip("][").split(", ")
+                new_msg = [int(i) for i in _list_]
+                string_list__ = json.loads(window.sessionStorage.getItem("string5"))
+                _list__ = string_list__.strip('][').split(", ")
+                col_msg = [int(i) for i in _list__]
+            if col_msg[i] == 0:
+                new_msg[i] = random.randrange(0,255,1)
+                col_msg[i] = 1
+            else:
+                new_msg[i] = enc_msg[i]
+                col_msg[i] = 0     
+            window.sessionStorage.setItem("string4",json.dumps(str(new_msg)))
+            window.sessionStorage.setItem("string5",json.dumps(str(col_msg)))
+
+    text = document.getElementById('enc_mes2')
+    text.innerHTML = ""
+    text.appendChild(document.createTextNode("["))
+    for i in range(0,len(new_msg)):      
+        element = document.createElement("button")
+        element.setAttribute("id","enc_msg_"+str(i))
+        element.setAttribute("type","button")
+        element.innerHTML = str(new_msg[i])
+        if col_msg[i] == 0:
+            element.style.color = "black" 
+        else:
+            element.style.color = "red" 
+        text.appendChild(element)
+        if i == len(new_msg)-1:  
+            text.appendChild(document.createTextNode("]"))
+        else:
+            text.appendChild(document.createTextNode(", "))
+        #Create proxies for each button
+        function(i)   
+    syndrome = rs_calc_syndromes(new_msg, int(parity))
+    # Element("fourier").write(str(syndrome))
+    fourney_syn = rs_forney_syndromes(syndrome,[],len(new_msg))
+    Element("fourney_syn").write(str(fourney_syn))
+    # compute the error locator polynomial using Berlekamp-Massey
+    err_loc = rs_find_error_locator(fourney_syn, int(parity), erase_count=0)
+    Element("BM_loc").write(str(err_loc))
+    # locate the message errors using Chien search (or brute-force search)
+    err_pos = rs_find_errors(err_loc[::-1], len(new_msg))
+    Element("err_pos").write(str(err_pos))
+    # if err_pos is None:
+    # raise ReedSolomonError("Could not locate error")  # error location failed
+    # Find errors values and apply them to correct the message
+    # compute errata evaluator and errata magnitude polynomials, then correct errors and erasures
+    msg_out = rs_correct_errata(new_msg, syndrome, (err_pos))  # note that we here use the original syndrome, not the forney syndrome
+    Element("final_mes").write(str(msg_out))
+    # (because we will correct both errors and erasures, so we need the full syndrome)
+
+#Create proxies for each button
+def function(z):      
+    ol_string = "enc_msg_"+str(z)
+    btn = document.getElementById(ol_string)
+    wrappers.add_event_listener(btn,"click",lambda event: error_bytes(event,array_but=ol_string))
+
+def init_change(event):
+    document.getElementById("switch1").style.color = "red"
+    error_bytes(event)
+
+def gen_mes(event):
+    console.log('button2 pressed')
+    if document.getElementById("rs_mes").style.visibility == "hidden":
+        document.getElementById("rs_mes").style.visibility = "visible"
+        document.getElementById("rs_mes2").style.visibility = "visible"
+        document.getElementById("remainder").style.visibility = "visible"
+        document.getElementById("enc_mes").style.visibility = "visible"
+        output_text(15,3)
+        document.getElementById("button3").style.visibility = "visible"
+    error_bytes(event,button_p="yes")
+
+def display_rs(event):
+        if document.getElementById("row16_1").style.visibility == "hidden":
+            display_stored_image("rs_1","demo_rs_enc")
+            output_text(16,1)
+            document.getElementById("enc_mes2").style.visibility = "visible"
+
+document.getElementById("error_bytes").addEventListener("change", create_proxy(init_change))
+document.getElementById("button2").addEventListener("click", create_proxy(gen_mes))
+document.getElementById("button3").addEventListener("click", create_proxy(display_rs))
+
 def output_text(row,num):
     for i in range(0,num):
         document.getElementById('row'+str(row)+'_'+str(i+1)).style.visibility='visible'
@@ -1209,7 +1397,6 @@ def output_text(row,num):
 def output_matrix(row,num):
     for i in range(0,num):  
         document.getElementById('matrix'+str(row)+'_'+str(i+1)).style.visibility='visible'
-
 
 # async def main()7
 #     while True7
@@ -1296,3 +1483,4 @@ console.log("default script completed")
 #     _link_docs(pydoc, jsdoc)
 
 # asyncio.ensure_future(show(row, 'myplot'))
+

@@ -62,7 +62,7 @@ Animation System by Neale Van Fleet from Rogue Amoeba
       opacity: 0;
       color:limegreen;
       filter: brightness(3) saturate(3);
-      transform: scale(0.8, 0.8);
+      transform: scale(1, 1);
     }
     100% {
       opacity: 1;

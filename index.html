@@ -17,19 +17,19 @@
     <p4 style="color:black">Welcome to <h1>Err<span style="color:limegreen" id ="zero"></span>r Correcti<span style="color:limegreen" id="one"></span>g Cod<span style="color:limegreen" id="two"></span>s</h1></p4>
     <p4 id="Title_text" style="visibility:hidden;color:black">Upload an image to get started:</p4>
     <label style="visibility: hidden" for="Upload a PNG image" id="label"><input type="file" id="file-upload"></label>
-    <div id="output_upload"></div>
+    <div id="output_upload"> <p style="visibility:hidden">Some random text</p><p4 id="Title_text2" style="visibility:hidden;color:black;">The image will be <span style="font-weight: bold;" >converted to black and white </span>so images with large ranges from light to dark work best.</p4></div>
     <div id="loading_ani"><div></div><div></div><div></div></div>
 </div>
 <div class="container">
     <div id="row1" class="row">
         <h4 id="row1_1" style="visibility:hidden">Hamming Codes</h4>
-        <p2 id="row1_2" style="visibility:hidden">Hamming codes were invented by Richard Hamming in the 1950's. They allow you to extend the binary messages by including information about the message in extra bits, a bit being a 1 or 0.
-            These extra bits are called parity bits. In the examples below, we will use a specific type of hamming code, the hamming (7,4). 
-            This means for every <span style="color:lightseagreen">4 message bits</span> encoded we will get back 7 bits, the extra being <span style="color:orange">3 parity bits</span>.</p2>
+        <p2 id="row1_2" style="visibility:hidden">Extend binary messages by including information about the message in extra bits, a bit being a 1 or 0.
+            These extra bits are called parity bits. In the examples below, a specific type of hamming code, the hamming (7,4) will be used. 
+            This means for every <span style="color:lightseagreen">4 message bits</span> encoded there will be 7 bits returned, the extra being <span style="color:orange">3 parity bits</span>.</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row2" class="row">
-        <p2 id="row2_1" style="visibility:hidden">We use matrix multiplication with a specific matrix called a <span style="color:crimson">generator matrix</span> to encode binary messages. Try encoding some binary messages with it:</p2>
+        <p2 id="row2_1" style="visibility:hidden">Matrix multiplication with a specific matrix called a <span style="color:crimson">generator matrix</span> is required to encode the binary message. Try encoding some binary messages with it:</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div class = "row" style="margin-left:50px;">
@@ -104,15 +104,14 @@
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row3" class="row">
-        <p2 style="visibility:hidden" id="row3_1">The outcome of the matrix multiplication is not always enough because sometimes the output has a 2 or 3 which is not binary. When this happens, we apply the 
-            rules of a finite field, specifically GF(2). This basically means we take the remainder of each element after we
-            divide by two. This allows our result to stay binary. Try different combinations to see how the finite field is applied.</p2>
+        <p2 style="visibility:hidden" id="row3_1">The outcome of the matrix multiplication is not always enough because sometimes the output has a 2 or 3 which is not binary. When this happens, finite field rules are applied, specifically GF(2). This basically means we take the remainder of each element after we
+            divide by two. This allows our result to stay binary. In coding, it is called mod 2 or % 2. Try different combinations to see how the finite field is applied.</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
 </div>
 <div class="container">
     <div id="row4" class="row">
-        <p2 style="visibility:hidden" id="row4_1">Now lets encode a binary image. Like the last step from above, we can organise the parity bits to be at the end of the message, or for an image to the very right. What do you think it will look like?</p2>
+        <p2 style="visibility:hidden" id="row4_1">Now lets encode a binary image. Like the last step from above, the parity bits to be collected at the end of the message, or for an image to the very right. What do you think it will look like?</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="output_upload_hamming">
@@ -122,8 +121,8 @@
 <div class="container">
     <p style="visibility:hidden">Some random text</p>
     <div id="row5" class="row">
-        <p2 id="row5_1" style="visibility: hidden;">The point of encoding is to correct errors. We use matrix multiplication with a <span style="color:crimson">syndrome matrix</span> to calculate a binary number 
-            that tells us the place where the error has occured. Try testing it out by adding errors to the encoded 7 bit message from above:</p2>
+        <p2 id="row5_1" style="visibility: hidden;">Matrix multiplication with a <span style="color:crimson">parity check matrix</span> is required to calculate a binary number 
+            that tells us the place where the error has occured. Both the <span style="color:crimson">parity check matrix</span> and the <span style="color:crimson">generator matrix</span> are tied together, you can see how they are calculated <a href="https://en.wikipedia.org/wiki/Hamming_code#Construction_of_G_and_H" target="_blank">here</a>. Try testing it out error correction by adding errors to the encoded 7 bit message from above:</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <p3 style="visibility:hidden">Some random text</p3>
@@ -165,7 +164,7 @@
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row6" class="row">
-        <p2 id="row6_1" style="visibility: hidden;">Knowing the place of the error, we can flip the bit. Then deconstruct back the orginal message. Its downside is how many errors it can correct, you can see with multiple errors, it loses its correction capabilities.</p2>
+        <p2 id="row6_1" style="visibility: hidden;">The finite field rules GF(2) still applies to the output. Knowing the place of the error, the incorrect bit can be swapped, therefore correcting the error. Then deconstruct back the orginal message. Its downside is how many errors it can correct, you can see with multiple errors, it loses its correction capabilities.</p2>
     </div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row7" class="row">
@@ -212,31 +211,115 @@
     <div  id="output_upload_corrected"></div>
     <p style="visibility:hidden;">Some random text</p>
     <div id="row9" class="row">
-        <p2 id="row9_1" style="visibility: hidden;">You can see how much error it can correct and how much still gets through. Take note, the level of noise that can get through.</p2> 
+        <p2 id="row9_1" style="visibility: hidden;">Take note, the level of noise that can get through.</p2> 
     </div>
     <p style="visibility:hidden;">Some random text</p>
 </div>
 <div class="container">
     <div id="row10" class="row">
         <h4 id="row10_1" style="visibility: hidden;">Reed Solomon Codes</h4>
-        <p2 id="row10_2" style="visibility: hidden;">Hamming Codes are limited to binary messages and single bit error correction. If the aim is to correct more errors we can use Reed Solomon Codes. In the Reed Solomon codes below, 8 bits are collected 
-            together to make up a symbol that can be encoded in a similar process. Because the symbols are 8 bits (a byte) the finite field will be GF(2^8). Another process Reed Solomon does different is encoding and decoding. 
-            Previously, linear algebra (matrices) was used for encoding and decoding. Instead, we will be using is polynomial mathematics.</p2>
+        <p2 id="row10_2" style="visibility: hidden;">Hamming Codes are limited to binary messages and single bit error correction. If the aim is to correct more errors, Reed Solomon Codes offers a solution by allowing extension of the parity section length. In the Reed Solomon codes below, 8 bits are collected 
+            together to make up a symbol that can be encoded in a similar process. Because the symbols are 8 bits (a byte) the finite field will be GF(2<sup>8</sup>). Another process Reed Solomon does different is encoding and decoding. 
+            Previously, linear algebra (matrices) was used for encoding and decoding, instead polynomial mathematics will be used.</p2>
         <p style="visibility:hidden;">Some random text</p>
-        <p2 id="row10_3" style="visibility: hidden;color:orange">Currently working on interactive reed solomon section, however the image stuff below still works. If it doesn't work initially, it is still loading in the backround.</p2>
-        <!-- <p2 id="row10_3" style="visibility: hidden;">Try inputting an array to encode like this: <span style="color:lightseagreen">233,144,67,97,255</span> </p2>
-        <input type="text" id="test-input"/>
-        <button id="submit-button" type="submit" pys-onClick="my_function">OK</button> -->
+        <p2 id="row10_3" style="visibility: hidden;">To start, a primitive polynomial is selected to work in conjunction with our GF(2<sup>8</sup>). <span style="font-family: 'Times New Roman', Times, serif;">P(x) = x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>2</sup> + 1</span> will be used for the examples below but any primitive polynomial of highest degree 8 should work. 
+            A generator polynomial must be constructed with polynomial multiplication for encoding purposes. To correct 
+            <select class="form_control" id="error_bytes">
+                <option value=2>1</option>
+                <option value=4>2</option> 
+                <option value=6>3</option>
+                <option value=8>4</option> 
+                <option value=10>5</option> 
+                <option value=12>6</option>
+                <option value=14>7</option>
+            </select> error bytes, <span id="bytes_1" style="color:orange">_</span> <span  style="color:orange">parity bytes</span> will be required. If the message contains <span style="color:lightseagreen">5 bytes</span>, this makes the code a reed solomon <span id="bytes_2">___</span>
+        .</p2>
+        <p3 style="visibility:hidden;">Some random text</p> 
+    </div>
+    <div class="row">
+        <p2 id="row10_5" style="visibility: hidden;">For each parity byte included, the generator polynomial appended by the following:</p2>
     </div>
     <p style="visibility:hidden;">Some random text</p>
-    <!-- <div id="row14" class="row">
-        <p2 id="row14_2" style="visibility: hidden;color:lightseagreen"></p2>
+    <p id="gen_pol1" style="visibility:hidden;text-align:center;font-size: x-large;font-family: 'Times New Roman', Times, serif;margin-block-end: auto;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row10_4" style="visibility: hidden;">This makes the generator polynomial, <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> to be:</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p style="text-align:center;font-size: x-large;font-family: 'Times New Roman', Times, serif;"><span id="gen_pol2" style="visibility:hidden;"></span></p>    
+    <div id="row14" class="row">
+        <p2 id="row14_1" style="visibility: hidden;">Something interesting to note is the rules for generating the generator polynomial when trying to correct 5 or more error bytes changes. This 
+            is because a number higher than 255 falls outside the GF(2<sup>8</sup>). If you are curious about the rules of polynomial mathematics within finite fields, 
+            you should check out this <a href="https://www.ece.unb.ca/cgi-bin/tervo/calc2.pl" target="_blank">website</a> by the University of New Brunswick.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>  
+    <div id="row14" class="row">    
+        <p2 id="row14_2" style="visibility: hidden;">Construct a 5 byte message: <button type="button" id="button2">Generate Message</button></p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "rs_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility:hidden;"></p>
+    <p style="visibility:hidden;color:red">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_1" style="visibility: hidden;">Then convert the message into a polynomial based of the highest degree of the <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> polynomial.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "rs_mes2" style="text-align:center;font-size: x-large;font-family:'Times New Roman', Times, serif;visibility:hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_2" style="visibility: hidden;">The message polynomial, <span style="font-family: 'Times New Roman', Times, serif;">M(x)</span> is divided by the generator polynomial, 
+        <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> to produce two outputs. A quotient and remainder polynomial. The remainder polynomial, <span style="font-family: 'Times New Roman', Times, serif;">R(x)</span> is added to <span style="font-family: 'Times New Roman', Times, serif;">M(x)</span> to finalise the encoded message. This produces the encoded reed solomon code.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "remainder" style="text-align:center;font-size: x-large;font-family:'Times New Roman', Times, serif;visibility: hidden;"></p>
+    <p id= "enc_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_3" style="visibility: hidden;">Now with encoding understood, what would an image that has been reed solomon (9,5) encoded look like? The same as before, the parity bytes will be collected and displayed to right side of the image.
+            Image size has also been reduced to make image computations faster.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="demo_rs_enc"><button style="visibility: hidden;" type="button" id="button3">Display Image</button></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row16_1" style="visibility: hidden;">With encoding finished, noise can be applied to the encoded message to test its error correction.</p2>
+    </div>
+    <p id="switch1" style="color:red;visibility:hidden;">Some random text</p>
+    <p id= "enc_mes2" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p  style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row17_1" style="visibility: hidden;">Instead of going through
+             the details of the algorithms used, they will be listed as well as the output they produced. 
+             If you are curious about how each algorithm step works, links to wikipedia pages and websites will be provided.</p2>     
         <p style="visibility:hidden;">Some random text</p>
-        <p2 id="row14_3" style="visibility: hidden;"></p2>
-    </div> -->
-    <!-- <p style="visibility:hidden;">Some random text</p> -->
+    </div>  
+    <!-- <p id= "fourier" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;"></p> -->
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_1">The first step to correcting possible errors is to find the syndrome. To do this a Fourier Transform must be calculated. Horners scheme for polynomial mathematics will make this faster, see <a href="https://www.cs.upc.edu/~mjserna/docencia/gm-aic/2021/3-AiC-Poly.pdf" target="_blank">here</a>.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "fourney_syn" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_2">Then calculate the error locator polynomial with <a href="https://www-users.cse.umn.edu/~garrett/students/reu/MB_algorithm.pdf" target="_blank">Berlekamp-Massey</a> alogorithm.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "BM_loc" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_3">The error location positions can be calculted with a <a href="https://en.wikipedia.org/wiki/Chien_search" target="_blank">Chien search</a> (inverse Fourier Transform). It contains a list of positions where the error has occurred with the first position being 0 unlike the hamming syndrome.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "err_pos" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_4">Finally, the message can be corrected by adding the encoded message to the errate message. The errate message is calculated from the <a href="https://en.wikipedia.org/wiki/Forney_algorithm" target="_blank">Fourney</a> algorithm that takes the incorrect msg, error location polynomial and error location postion list. Curious about how these steps work? Check out <a href="http://web.stanford.edu/~marykw/classes/CS250_W19/readings/Forney_Introduction_to_Finite_Fields.pdf" target="_blank">Introduction to finite fields by MIT</a>
+         and <a href="https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html" target="_blank">Reed-Solomon Codes by CMU</a> for further reading.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "final_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
     <div id="row11" class="row">
-        <p2 id="row11_1" style="visibility: hidden;">Here we can extend the image to include more parity bytes:
+        <p2 id="row11_1" style="visibility: hidden;">Let's experiment with your image, choose reed solomon:
             <select class="form_control" id="selection_box2">
                 <option value=1>(9,5)</option>
                 <option value=3>(17,5)</option> 
@@ -245,8 +328,10 @@
                 <option value=9>(41,5)</option> 
             </select>
         </p2>
-    </div>
+    </div>  
+    <p style="visibility:hidden;">Some random text</p>
     <div id="reed_s"></div>
+    <p style="visibility:hidden;">Some random text</p>
     <div id="row12" class="row">
         <p2 id="row12_1" style="visibility: hidden;">Choose the noise level here:
             <select class="form_control" id="selection_box3">
@@ -258,18 +343,23 @@
             </select>
         </p2>
     </div>
+    <p style="visibility:hidden;">Some random text</p>
     <div id="noisy_2"></div>
     <p style="visibility:hidden">Some random text</p>
     <div id="noisy_image_2"></div>
     <p style="visibility:hidden">Some random text</p>
     <div id="row13" class="row">
-        <p2 id="row13_1" style="visibility: hidden;">After error correction the image looks like this:</p2>
+        <p2 id="row12_2" style="visibility: hidden;">After error correction the image looks like this:</p2>
     </div>  
+    <p style="visibility:hidden;">Some random text</p>
     <div id="corrected_2"></div>
     <p style="visibility:hidden">Some random text</p>
 </div>
 <div class="jumbotron">
     <py-script src="./widget.py"></py-script>
+    <p2>Thanks for engaging and interacting with this website. Want to implement your own reed solomon code, check out this resource with a python implementation: <a href="https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders" target="_blank">Reed-Solomon Codes for Coders</a>. 
+        You can see the code for this website on <a href="https://github.com/LiamPateyDennis/ErrorCorrectingAlgorithms.github.io" target="_blank">Github</a>. 
+        This website was made in conjunction with University of Newcastle, Australia.</p2>
 </div>
 </body>
 </html>
