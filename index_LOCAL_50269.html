@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Error Correcting Codes</title>
+<link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.js">
+<script defer src="https://pyscript.net/releases/2025.11.1/core.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="styling.css">
+<link rel="stylesheet" href="animate.css">
+</head>
+
+
+<body>
+<py-config>packages = ["numpy","Pillow","seaborn"]</py-config>
+<!-- <py-script src="./website_title.py"></py-script> -->
+<div class="jumbotron">
+    <p4 style="color:black">Welcome to <h1>Err<span style="color:limegreen" id ="zero"></span>r Correcti<span style="color:limegreen" id="one"></span>g Cod<span style="color:limegreen" id="two"></span>s</h1></p4>
+    <p4 id="Title_text" style="visibility:hidden;color:black">Upload an image to get started:</p4>
+    <label style="visibility: hidden" for="Upload a PNG image" id="label"><input type="file" id="file-upload"></label>
+    <div id="output_upload"> <p style="visibility:hidden">Some random text</p><p4 id="Title_text2" style="visibility:hidden;color:black;">The image will be <span style="font-weight: bold;" >converted to black and white </span>so images with large ranges from light to dark work best.</p4></div>
+    <div id="loading_ani"><div></div><div></div><div></div></div>
+</div>
+<div class="container">
+    <div id="row1" class="row">
+        <h4 id="row1_1" style="visibility:hidden">Hamming Codes</h4>
+        <p2 id="row1_2" style="visibility:hidden">Extend binary messages by including information about the message in extra bits, a bit being a 1 or 0.
+            These extra bits are called parity bits. In the examples below, a specific type of hamming code, the hamming (7,4) will be used. 
+            This means for every <span style="color:lightseagreen">4 message bits</span> encoded there will be 7 bits returned, the extra being <span style="color:orange">3 parity bits</span>.</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row2" class="row">
+        <p2 id="row2_1" style="visibility:hidden">Matrix multiplication with a specific matrix called a <span style="color:crimson">generator matrix</span> is required to encode the binary message. Try encoding some binary messages with it:</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div class = "row" style="margin-left:50px;">
+        <div class="col-sm-1">
+            <table style="visibility: hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson" class="matrix" id="matrix1_1">
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+            </table>
+        </div>
+        <p id="matrix1_2" style="visibility: hidden;font-weight: bold;margin-left: 45px;margin-right: 15px;margin-top: 130px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#xD7;</p>
+        <div class="col-sm-2" style="top: 50px;">
+            <table style="visibility: hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="matrix1_3">
+                <tr><td><select style="color:lightseagreen" id="int1">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select></td></tr>
+                <tr><td><select style="color:lightseagreen" id="int2">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select></td></tr>
+                <tr><td><select style="color:lightseagreen" id="int3">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select></td></tr>
+                <tr><td><select style="color:lightseagreen" id="int4">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select></td></tr>
+            </table> 
+        </div>
+        <p id="equals1" style="visibility:hidden;margin-left:-20px;margin-right: 20px;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">=</p>
+        <div class="col-sm-3">
+            <div class="row">
+            <table style="margin-left:50px;visibility:hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output">
+                <tr><td style="color:orange" id = 'out_b4_1'></td></tr>
+                <tr><td style="color:orange" id = 'out_b4_2'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_b4_3'></td></tr>
+                <tr><td style="color:orange" id = 'out_b4_4'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_b4_5'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_b4_6'></td></tr>
+                <tr><td style="color:lightseagreen" style="color:lightseagreen" id = 'out_b4_7'></td></tr>
+            </table>
+            <p id="equals2" style="visibility:hidden;margin-left: 40px;margin-right: 40px;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#8594;</p>
+            <table style="visibility:hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output2">
+                <tr><td style="color:orange" id = 'out1'></td></tr>
+                <tr><td style="color:orange" id = 'out2'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out3'></td></tr>
+                <tr><td style="color:orange" id = 'out4'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out5'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out6'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out7'></td></tr>
+            </table>
+            </div>
+        </div>
+        <p id="equals3" style="visibility:hidden;margin-left:-30px;margin-right: 20px;;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;">&#8594;</p>
+        <div class="col-sm-4">
+            <table style="visibility:hidden;font-size: x-large;font-family: 'Times New Roman', Times, serif;" class="matrix" id="output3">
+                <tr><td style="color:lightseagreen" id = 'out_af_1'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_af_2'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_af_3'></td></tr>
+                <tr><td style="color:lightseagreen" id = 'out_af_4'></td></tr>
+                <tr><td style="color:orange" id = 'out_af_5'></td></tr>
+                <tr><td style="color:orange" id = 'out_af_6'></td></tr>
+                <tr><td style="color:orange" id = 'out_af_7'></td></tr>
+            </table>
+        </div>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row3" class="row">
+        <p2 style="visibility:hidden" id="row3_1">The outcome of the matrix multiplication is not always enough because sometimes the output has a 2 or 3 which is not binary. When this happens, finite field rules are applied, specifically GF(2). This basically means we take the remainder of each element after we
+            divide by two. This allows our result to stay binary. In coding, it is called mod 2 or % 2. Try different combinations to see how the finite field is applied.</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+</div>
+<div class="container">
+    <div id="row4" class="row">
+        <p2 style="visibility:hidden" id="row4_1">Now lets encode a binary image. Like the last step from above, the parity bits to be collected at the end of the message, or for an image to the very right. What do you think it will look like?</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="output_upload_hamming">
+        <button style="visibility: hidden;" type="button" id="button1">Display Image</button>
+    </div>
+</div>
+<div class="container">
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row5" class="row">
+        <p2 id="row5_1" style="visibility: hidden;">Matrix multiplication with a <span style="color:crimson">parity check matrix</span> is required to calculate a binary number 
+            that tells us the place where the error has occured. Both the <span style="color:crimson">parity check matrix</span> and the <span style="color:crimson">generator matrix</span> are tied together, you can see how they are calculated <a href="https://en.wikipedia.org/wiki/Hamming_code#Construction_of_G_and_H" target="_blank">here</a>. Try testing it out error correction by adding errors to the encoded 7 bit message from above:</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <p3 style="visibility:hidden">Some random text</p3>
+    <div class = "row" style="margin-left: 50px;margin-top: 90px">
+        <div class="col-sm-1">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;color:crimson;visibility: hidden;" class="matrix" id="matrix4_1">
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            </table>
+        </div>
+        <p id="matrix4_2" style="font-weight: bold;margin-top:45px;margin-left:105px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#xD7;</p>
+        <div class="col-sm-2">  
+            <table style="margin-top:-100px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix4_3">
+                <tr><td id = 'out_c_1'></td><td><select id="flip1"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_2'></td><td><select id="flip2"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_3'></td><td><select id="flip3"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_4'></td><td><select id="flip4"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_5'></td><td><select id="flip5"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_6'></td><td><select id="flip6"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+                <tr><td id = 'out_c_7'></td><td><select id="flip7"><option value=0>&#9744;</option><option value=1>&#9746;</option></select></td></tr>
+            </table>
+        </div>
+        <p id="matrix5_1" style="font-weight: bold;margin-top:45px;margin-left:-20px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">=</p>
+        <div class="col-sm-3">
+            <table style="color:aquamarine;margin-left:30px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix5_2">
+                <tr><td style="color:purple" id = 'syn1'></td></tr>
+                <tr><td style="color:purple" id = 'syn2'></td></tr>
+                <tr><td style="color:purple" id = 'syn3'></td></tr>
+            </table>
+        </div>
+        <p id="matrix5_3" style="font-weight: bold;margin-top:45px;margin-left:-140px;margin-right: 20px;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#8594;</p>
+        <div class="col-sm-4">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix5_4">
+                <tr><td style="color:purple" id = 'syn_b_1'></td><td style="color:purple" id = 'syn_b_2'></td><td style="color:purple" id = 'syn_b_3'></td></tr>
+                <p id="decimal" style="font-size: x-large;font-family: 'Times New Roman', Times, serif;margin-left:27px;visibility: hidden;"></p>
+            </table>
+        </div>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row6" class="row">
+        <p2 id="row6_1" style="visibility: hidden;">The finite field rules GF(2) still applies to the output. Knowing the place of the error, the incorrect bit can be swapped, therefore correcting the error. Then deconstruct back the orginal message. Its downside is how many errors it can correct, you can see with multiple errors, it loses its correction capabilities.</p2>
+    </div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row7" class="row">
+        <div class="col-sm-1">
+            <table style="margin-left:200px;font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix6_1">
+                <tr><td style="color:orange" id='cor_1'></td></tr>
+                <tr><td style="color:orange" id='cor_2'></td></tr>
+                <tr><td style="color:lightseagreen" id='cor_3'></td></tr>
+                <tr><td style="color:orange" id='cor_4'></td></tr>
+                <tr><td style="color:lightseagreen" id='cor_5'></td></tr>
+                <tr><td style="color:lightseagreen" id='cor_6'></td></tr>
+                <tr><td style="color:lightseagreen" id='cor_7'></td></tr>
+            </table>
+        </div>
+        <p id="matrix6_2" style="margin-left:230px;margin-right: 20px;;margin-top: 130px;font-weight: bold;font-size: xx-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;">&#8594;</p>
+        <div class="col-sm-2" style="margin-left:50px;top: 50px;">
+            <table style="font-size: x-large;font-family: 'Times New Roman', Times, serif;visibility: hidden;" class="matrix" id="matrix6_3">
+                <tr><td style="color:lightseagreen" id="final1"></td></tr>
+                <tr><td style="color:lightseagreen" id="final2"></td></tr>
+                <tr><td style="color:lightseagreen" id="final3"></td></tr>
+                <tr><td style="color:lightseagreen" id="final4"></td></tr>
+            </table>  
+        </div>
+    </div>
+</div>
+<div class="container">
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row8" class="row">
+        <p2 id="row8_1" style="visibility: hidden;">Now lets try it with an image. Interact with the noise to load the images:
+            <select class="form_control" id="selection_box1">
+                <option value=1>0.25%</option>
+                <option value=2>0.5%</option>
+                <option value=4>1.0%</option>
+                <option value=6>1.5%</option>
+                <option value=8>2.0%</option> 
+            </select>
+        </p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="output_upload_noise"></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div  id="output_upload_noisy_image"></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div  id="output_upload_corrected"></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row9" class="row">
+        <p2 id="row9_1" style="visibility: hidden;">Take note, the level of noise that can get through.</p2> 
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+</div>
+<div class="container">
+    <div id="row10" class="row">
+        <h4 id="row10_1" style="visibility: hidden;">Reed Solomon Codes</h4>
+        <p2 id="row10_2" style="visibility: hidden;">Hamming Codes are limited to binary messages and single bit error correction. If the aim is to correct more errors, Reed Solomon Codes offers a solution by allowing extension of the parity section length. In the Reed Solomon codes below, 8 bits are collected 
+            together to make up a symbol that can be encoded in a similar process. Because the symbols are 8 bits (a byte) the finite field will be GF(2<sup>8</sup>). Another process Reed Solomon does different is encoding and decoding. 
+            Previously, linear algebra (matrices) was used for encoding and decoding, instead polynomial mathematics will be used.</p2>
+        <p style="visibility:hidden;">Some random text</p>
+        <p2 id="row10_3" style="visibility: hidden;">To start, a primitive polynomial is selected to work in conjunction with our GF(2<sup>8</sup>). <span style="font-family: 'Times New Roman', Times, serif;">P(x) = x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>2</sup> + 1</span> will be used for the examples below but any primitive polynomial of highest degree 8 should work. 
+            A generator polynomial must be constructed with polynomial multiplication for encoding purposes. To correct 
+            <select class="form_control" id="error_bytes">
+                <option value=2>1</option>
+                <option value=4>2</option> 
+                <option value=6>3</option>
+                <option value=8>4</option> 
+                <option value=10>5</option> 
+                <option value=12>6</option>
+                <option value=14>7</option>
+            </select> error bytes, <span id="bytes_1" style="color:orange">_</span> <span  style="color:orange">parity bytes</span> will be required. If the message contains <span style="color:lightseagreen">5 bytes</span>, this makes the code a reed solomon <span id="bytes_2">___</span>
+        .</p2>
+        <p3 style="visibility:hidden;">Some random text</p> 
+    </div>
+    <div class="row">
+        <p2 id="row10_5" style="visibility: hidden;">For each parity byte included, the generator polynomial appended by the following:</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id="gen_pol1" style="visibility:hidden;text-align:center;font-size: x-large;font-family: 'Times New Roman', Times, serif;margin-block-end: auto;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row10_4" style="visibility: hidden;">This makes the generator polynomial, <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> to be:</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p style="text-align:center;font-size: x-large;font-family: 'Times New Roman', Times, serif;"><span id="gen_pol2" style="visibility:hidden;"></span></p>    
+    <div id="row14" class="row">
+        <p2 id="row14_1" style="visibility: hidden;">Something interesting to note is the rules for generating the generator polynomial when trying to correct 5 or more error bytes changes. This 
+            is because a number higher than 255 falls outside the GF(2<sup>8</sup>). If you are curious about the rules of polynomial mathematics within finite fields, 
+            you should check out this <a href="https://www.ece.unb.ca/cgi-bin/tervo/calc2.pl" target="_blank">website</a> by the University of New Brunswick.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>  
+    <div id="row14" class="row">    
+        <p2 id="row14_2" style="visibility: hidden;">Construct a 5 byte message: <button type="button" id="button2">Generate Message</button></p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "rs_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility:hidden;"></p>
+    <p style="visibility:hidden;color:red">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_1" style="visibility: hidden;">Then convert the message into a polynomial based of the highest degree of the <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> polynomial.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "rs_mes2" style="text-align:center;font-size: x-large;font-family:'Times New Roman', Times, serif;visibility:hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_2" style="visibility: hidden;">The message polynomial, <span style="font-family: 'Times New Roman', Times, serif;">M(x)</span> is divided by the generator polynomial, 
+        <span style="font-family: 'Times New Roman', Times, serif;">G(x)</span> to produce two outputs. A quotient and remainder polynomial. The remainder polynomial, <span style="font-family: 'Times New Roman', Times, serif;">R(x)</span> is added to <span style="font-family: 'Times New Roman', Times, serif;">M(x)</span> to finalise the encoded message. This produces the encoded reed solomon code.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "remainder" style="text-align:center;font-size: x-large;font-family:'Times New Roman', Times, serif;visibility: hidden;"></p>
+    <p id= "enc_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row15" class="row">    
+        <p2 id="row15_3" style="visibility: hidden;">Now with encoding understood, what would an image that has been reed solomon (9,5) encoded look like? The same as before, the parity bytes will be collected and displayed to right side of the image.
+            Image size has also been reduced to make image computations faster.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="demo_rs_enc"><button style="visibility: hidden;" type="button" id="button3">Display Image</button></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row16_1" style="visibility: hidden;">With encoding finished, noise can be applied to the encoded message to test its error correction.</p2>
+    </div>
+    <p id="switch1" style="color:red;visibility:hidden;">Some random text</p>
+    <p id= "enc_mes2" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p  style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 id="row17_1" style="visibility: hidden;">Instead of going through
+             the details of the algorithms used, they will be listed as well as the output they produced. 
+             If you are curious about how each algorithm step works, links to wikipedia pages and websites will be provided.</p2>     
+        <p style="visibility:hidden;">Some random text</p>
+    </div>  
+    <!-- <p id= "fourier" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;"></p> -->
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_1">The first step to correcting possible errors is to find the syndrome. To do this a Fourier Transform must be calculated. Horners scheme for polynomial mathematics will make this faster, see <a href="https://www.cs.upc.edu/~mjserna/docencia/gm-aic/2021/3-AiC-Poly.pdf" target="_blank">here</a>.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "fourney_syn" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_2">Then calculate the error locator polynomial with <a href="https://www-users.cse.umn.edu/~garrett/students/reu/MB_algorithm.pdf" target="_blank">Berlekamp-Massey</a> alogorithm.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "BM_loc" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_3">The error location positions can be calculted with a <a href="https://en.wikipedia.org/wiki/Chien_search" target="_blank">Chien search</a> (inverse Fourier Transform). It contains a list of positions where the error has occurred with the first position being 0 unlike the hamming syndrome.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "err_pos" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div class="row">
+        <p2 style="visibility:hidden;" id="row18_4">Finally, the message can be corrected by adding the encoded message to the errate message. The errate message is calculated from the <a href="https://en.wikipedia.org/wiki/Forney_algorithm" target="_blank">Fourney</a> algorithm that takes the incorrect msg, error location polynomial and error location postion list. Curious about how these steps work? Check out <a href="http://web.stanford.edu/~marykw/classes/CS250_W19/readings/Forney_Introduction_to_Finite_Fields.pdf" target="_blank">Introduction to finite fields by MIT</a>
+         and <a href="https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html" target="_blank">Reed-Solomon Codes by CMU</a> for further reading.</p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <p id= "final_mes" style="text-align:center;font-size: x-large;font-family:Verdana, Geneva, Tahoma, sans-serif;visibility: hidden;"></p>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row11" class="row">
+        <p2 id="row11_1" style="visibility: hidden;">Let's experiment with your image, choose reed solomon:
+            <select class="form_control" id="selection_box2">
+                <option value=1>(9,5)</option>
+                <option value=3>(17,5)</option> 
+                <option value=5>(25,5)</option>
+                <option value=7>(33,5)</option> 
+                <option value=9>(41,5)</option> 
+            </select>
+        </p2>
+    </div>  
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="reed_s"></div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="row12" class="row">
+        <p2 id="row12_1" style="visibility: hidden;">Choose the noise level here:
+            <select class="form_control" id="selection_box3">
+                <option value=0.5>0.25%</option>
+                <option value=1>0.5%</option>
+                <option value=2>1.0%</option>
+                <option value=3>1.5%</option> 
+                <option value=4>2.0%</option>
+            </select>
+        </p2>
+    </div>
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="noisy_2"></div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="noisy_image_2"></div>
+    <p style="visibility:hidden">Some random text</p>
+    <div id="row13" class="row">
+        <p2 id="row12_2" style="visibility: hidden;">After error correction the image looks like this:</p2>
+    </div>  
+    <p style="visibility:hidden;">Some random text</p>
+    <div id="corrected_2"></div>
+    <p style="visibility:hidden">Some random text</p>
+</div>
+<div class="jumbotron">
+    <py-script src="./widget.py"></py-script>
+    <p2>Thanks for interacting with this website. Want to implement your own reed solomon code, check out this resource with a python implementation: <a href="https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders" target="_blank">Reed-Solomon Codes for Coders</a>. 
+        You can view the code for this website on <a href="https://github.com/LiamPateyDennis/ErrorCorrectingAlgorithms.github.io" target="_blank">Github</a>. 
+        This website was made by Liam Patey-Dennis in conjunction with the University of Newcastle, Australia. Special thanks to Dr. Lawrence Ong for advice and guidance.</p2>
+</div>
+</body>
+</html>
