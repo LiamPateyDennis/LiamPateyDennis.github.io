@@ -1,4 +1,5 @@
 import "../css/MovieCard.css";
+// import "../types/Movie";
 
 interface Movie {
   title: string;

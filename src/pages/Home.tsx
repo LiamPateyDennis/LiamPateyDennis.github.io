@@ -1,11 +1,12 @@
 import MovieCard from "../components/MovieCard";
+import Movie from "../types/Movie";
 import React, { useState, useEffect } from "react";
 import "../css/Home.css";
 import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +39,7 @@ function Home() {
       setError(null);
     } catch (err) {
       console.log(err);
-      setError("Failed to search mvoies ...");
+      setError("Failed to search movies ...");
     } finally {
       setLoading(false);
     }
@@ -62,12 +63,13 @@ function Home() {
         <div className="loading">Loading ...</div>
       ) : (
         <div className="movies-grid">
-          {movies.map(
-            (movie) =>
-              movie.title.toLowerCase().startsWith(searchQuery) && (
-                <MovieCard movie={movie} key={movie.id} />
-              )
-          )}
+          {movies
+            .filter((movie) =>
+              movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((movie) => (
+              <MovieCard movie={movie} key={movie.id} />
+            ))}
         </div>
       )}
     </div>
