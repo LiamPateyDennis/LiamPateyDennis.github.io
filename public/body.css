@@ -1,0 +1,6 @@
+html, body {
+  margin: 0;          /* removes default white margins */
+  padding: 0;
+  height: 100%;       /* ensures full coverage */
+  background-color: #808080;
+}
