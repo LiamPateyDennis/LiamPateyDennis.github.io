@@ -9,10 +9,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
+import { ThemeProvider } from "@mui/material/styles";
+import { Link } from "react-router-dom"; // ✅ Correct import
 import theme from "../types/theme";
-import { ThemeProvider } from "@mui/material";
 
-const pages = ["Home", "Hamming", "Reed Solomon"];
+const pages = ["Home", "Repetition", "Hamming", "Reed Solomon"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -32,11 +33,12 @@ function ResponsiveAppBar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {/* Desktop title */}
             <Typography
               variant="h5"
               noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
+              component={Link}
+              to="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -50,10 +52,11 @@ function ResponsiveAppBar() {
               ERROR CORRECTING CODES
             </Typography>
 
+            {/* Mobile menu */}
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
-                aria-label="account of current user"
+                aria-label="menu"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleOpenNavMenu}
@@ -64,21 +67,20 @@ function ResponsiveAppBar() {
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                 keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
                 sx={{ display: { xs: "block", md: "none" } }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem
+                    key={page}
+                    component={Link}
+                    to={`/${page.toLowerCase().replace(/\s+/g, "-")}`} // ✅ fix
+                    onClick={handleCloseNavMenu}
+                  >
                     <Typography
                       sx={{ textAlign: "center", fontFamily: "monospace" }}
                     >
@@ -88,10 +90,13 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
+
+            {/* Mobile title */}
             <Typography
               variant="h5"
               noWrap
-              component="a"
+              component={Link}
+              to="/"
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -103,20 +108,22 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              Error Correcting Codes
+              ERROR CORRECTING CODES
             </Typography>
+
+            {/* Desktop buttons */}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  component={Link} // ✅ add Link
+                  to={`/${page.toLowerCase().replace(/\s+/g, "-")}`} // ✅ fix
                   sx={{
                     my: 2,
                     color: "white",
                     display: "block",
                     fontFamily: "monospace",
-                    // size: "small",
-                    // fontSize: "20",
+                    fontSize: "20px",
                   }}
                 >
                   {page}
@@ -129,4 +136,5 @@ function ResponsiveAppBar() {
     </ThemeProvider>
   );
 }
+
 export default ResponsiveAppBar;

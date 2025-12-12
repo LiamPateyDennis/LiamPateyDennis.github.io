@@ -1,5 +1,5 @@
 function Hamming() {
-  return <div></div>;
+  return <div>Hamming Page</div>;
 }
 
 export default Hamming;
