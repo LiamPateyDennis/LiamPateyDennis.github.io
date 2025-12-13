@@ -19,8 +19,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/hamming" element={<Hamming />} />
-            <Route path="repetition" element={<Repetition />} />
-            <Route path="reed-solomon" element={<ReedSolomon />} />
+            <Route path="/repetition" element={<Repetition />} />
+            <Route path="/reed-solomon" element={<ReedSolomon />} />
             <Route path="/testing" element={<Testing />} />
           </Routes>
         </main>

@@ -8,13 +8,9 @@ import { motion } from "motion/react";
 import AlbumIcon from "@mui/icons-material/Album";
 import ComputerIcon from "@mui/icons-material/Computer";
 import SendBinAnimation from "../components/SendBinAnimation";
-
-const box = {
-  width: 100,
-  height: 100,
-  backgroundColor: "#ff0088",
-  borderRadius: 5,
-};
+import box from "../types/box";
+import heading from "../types/heading";
+import text from "../types/text";
 
 function Home() {
   return (
@@ -25,26 +21,9 @@ function Home() {
         alignItems="center"
         size="grow"
       >
-        <Box
-          component="section"
-          sx={{
-            p: 3,
-            typography: "body1",
-            width: 800,
-            borderRadius: 5,
-            border: "1px dashed white",
-            bgcolor: "primary.dark",
-            mt: 5,
-          }}
-        >
-          <Box
-            sx={{
-              color: "primary.contrastText",
-              fontSize: 15,
-              fontWeight: 200,
-              fontFamily: "monospace",
-            }}
-          >
+        <Box component="section" sx={box}>
+          <Box sx={heading}>Origins</Box>
+          <Box sx={text}>
             The quality of a message depends entirely on the strength of the
             signal received. In the early 1940s, Richard Hamming confronted this
             challenge while working at Bell Labs. There, he had access to the
@@ -59,15 +38,15 @@ function Home() {
           <Grid
             container
             spacing={2}
-            display="flex"
+            // display="flex"
             justifyContent="center"
             alignItems="center"
             size="grow"
           >
             <Grid
-              size={2}
+              size={1}
               display="flex"
-              justifyContent="center"
+              justifyContent="right"
               alignItems="center"
             >
               <AlbumIcon sx={{ color: "primary.contrastText", fontSize: 60 }} />
@@ -81,9 +60,9 @@ function Home() {
               <SendBinAnimation />
             </Grid>
             <Grid
-              size={2}
+              size={1}
               display="flex"
-              justifyContent="center"
+              justifyContent="left"
               alignItems="center"
             >
               <ComputerIcon
@@ -92,18 +71,11 @@ function Home() {
             </Grid>
           </Grid>
           <br />
-          <Box
-            sx={{
-              color: "primary.contrastText",
-              fontSize: 15,
-              fontWeight: 200,
-              fontFamily: "monospace",
-            }}
-          >
-            The most common example of FEC, is the CD. The CD is encoded using
-            the Reed Solomon Codes. When the CD is scratched, binary on the disk
-            is changed. However, the original message, a movie or video game, is
-            still mostly intact. So how does it do that?
+          <Box sx={text}>
+            The most common example of FEC, is the CD. The CD is encoded using a
+            Reed Solomon Code. When the CD is scratched, binary on the disk is
+            changed. However, the original message, a movie or video game, is
+            still mostly intact.
           </Box>
         </Box>
       </Grid>
