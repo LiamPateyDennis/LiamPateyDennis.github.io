@@ -26,7 +26,9 @@ function Home() {
           <Box sx={text}>
             The aim of this website is to show, mathematically and through
             interactive examples, the different kinds of Error Correcting Codes
-            available to use.
+            available to use. The interactive examples are aimed to demonstrate
+            visually how these codes work, and what happens to the data at each
+            step of the message journey.
           </Box>
           <br />
           <Grid

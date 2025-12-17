@@ -13,7 +13,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { Link } from "react-router-dom"; // ✅ Correct import
 import theme from "../types/theme";
 
-const pages = ["Home", "Repetition", "Hamming", "Reed Solomon"];
+const pages = ["Home", "Repetition", "Hamming", "Reed Solomon", "Testing"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
