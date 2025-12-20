@@ -1,8 +1,5 @@
-/**
- * Accepts an input image (HTMLCanvasElement, ImageData, or HTMLImageElement),
- * tiles it, enforces black/white pixels, and returns a new HTMLCanvasElement.
- */
-function FuncRepetition(
+
+function EncodeRepetition(
   image: HTMLCanvasElement | ImageData | HTMLImageElement
 ): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
@@ -27,7 +24,7 @@ function FuncRepetition(
   }
 
   const tileX = 3;
-  const tileY = 3;
+  const tileY = 1;
   const out = document.createElement("canvas");
   out.width = srcCanvas.width * tileX;
   out.height = srcCanvas.height * tileY;
@@ -38,14 +35,8 @@ function FuncRepetition(
       outCtx.drawImage(srcCanvas, x * srcCanvas.width, y * srcCanvas.height);
     }
   }
-  // Ensure final output is strictly black or white (no greys)
-  const imageData = outCtx.getImageData(0, 0, out.width, out.height);
-  console.log(imageData);
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i += 1) {}
-  outCtx.putImageData(imageData, 0, 0);
 
   return out;
 }
 
-export default FuncRepetition;
+export default EncodeRepetition;

@@ -7,12 +7,13 @@ import theme from "../types/theme";
 import Grid from "@mui/material/Grid";
 import BlackWhiteImage from "../components/BlackWhiteImage";
 import React from "react";
-import Repetition from "./Repetition";
-import FuncRepetition from "../components/FuncRepetition";
+import EncodeRepetition from "../components/repetition/EncodeRepetition";
+import GenerateNoise from "../components/GenerateNoise";
 
 function Testing() {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
-  const [invertedSrc, setInvertedSrc] = React.useState<string | null>(null);
+  const [repetitionSrc, setRepetitionSrc] = React.useState<string | null>(null);
+  const [noiseSrc, setNoiseSrc] = React.useState<string | null>(null);
 
   return (
     <ThemeProvider theme={theme}>
@@ -25,22 +26,33 @@ function Testing() {
               src={imageSrc}
               onCanvas={(canvas) => {
                 try {
-                  const out = FuncRepetition(canvas);
-                  setInvertedSrc(out.toDataURL());
+                  const out = EncodeRepetition(canvas);
+                  setRepetitionSrc(out.toDataURL());
                 } catch (e) {
-                  setInvertedSrc(null);
+                  setRepetitionSrc(null);
+                }
+                try {
+                  const outNoise = GenerateNoise(out, 0.005);
+                  setNoiseSrc(outNoise.toDataURL());
+                } catch (e) {
+                  setNoiseSrc(null);
                 }
               }}
             />
           )}
 
-          {invertedSrc && (
+          {repetitionSrc && (
             <Box sx={{ marginTop: 2 }}>
               <img
-                src={invertedSrc}
+                src={repetitionSrc}
                 alt="inverted"
                 style={{ maxWidth: "100%" }}
               />
+            </Box>
+          )}
+          {noiseSrc && (
+            <Box sx={{ marginTop: 2 }}>
+              <img src={noiseSrc} alt="inverted" style={{ maxWidth: "100%" }} />
             </Box>
           )}
         </Box>
