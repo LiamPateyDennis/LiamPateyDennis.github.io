@@ -1,6 +1,5 @@
-
 function EncodeRepetition(
-  image: HTMLCanvasElement | ImageData | HTMLImageElement
+  image: HTMLCanvasElement | ImageData | HTMLImageElement | null
 ): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
 
@@ -15,6 +14,8 @@ function EncodeRepetition(
       srcCanvas.width = imgData.width;
       srcCanvas.height = imgData.height;
       ctx.putImageData(imgData, 0, 0);
+    } else if (image === null) {
+      throw new Error("No image provided to EncodeRepetition");
     } else {
       const imgEl = image as HTMLImageElement;
       srcCanvas.width = imgEl.naturalWidth || imgEl.width;

@@ -1,5 +1,5 @@
 function GenerateNoise(
-  image: HTMLCanvasElement | ImageData | HTMLImageElement,
+  image: HTMLCanvasElement | ImageData | HTMLImageElement | null,
   noise: number
 ) {
   let srcCanvas: HTMLCanvasElement;
@@ -15,6 +15,8 @@ function GenerateNoise(
       srcCanvas.width = imgData.width;
       srcCanvas.height = imgData.height;
       ctx.putImageData(imgData, 0, 0);
+    } else if (image === null) {
+      throw new Error("No image provided to GenerateNoise");
     } else {
       const imgEl = image as HTMLImageElement;
       srcCanvas.width = imgEl.naturalWidth || imgEl.width;

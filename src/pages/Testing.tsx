@@ -9,11 +9,14 @@ import BlackWhiteImage from "../components/BlackWhiteImage";
 import React from "react";
 import EncodeRepetition from "../components/repetition/EncodeRepetition";
 import GenerateNoise from "../components/GenerateNoise";
+import ConvertToBinary from "../components/ConvertToBinary";
 
 function Testing() {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
   const [repetitionSrc, setRepetitionSrc] = React.useState<string | null>(null);
   const [noiseSrc, setNoiseSrc] = React.useState<string | null>(null);
+
+  let encoded: HTMLCanvasElement | null = null;
 
   return (
     <ThemeProvider theme={theme}>
@@ -26,13 +29,13 @@ function Testing() {
               src={imageSrc}
               onCanvas={(canvas) => {
                 try {
-                  const out = EncodeRepetition(canvas);
-                  setRepetitionSrc(out.toDataURL());
+                  encoded = EncodeRepetition(canvas);
+                  setRepetitionSrc(encoded.toDataURL());
                 } catch (e) {
                   setRepetitionSrc(null);
                 }
                 try {
-                  const outNoise = GenerateNoise(out, 0.005);
+                  const outNoise = GenerateNoise(encoded, 0.005);
                   setNoiseSrc(outNoise.toDataURL());
                 } catch (e) {
                   setNoiseSrc(null);
@@ -40,6 +43,19 @@ function Testing() {
               }}
             />
           )}
+          {/* {imageSrc && (
+            <ConvertToBinary
+              src={imageSrc}
+              onCanvas={(canvas) => {
+                try {
+                  const out = EncodeRepetition(canvas);
+                  setRepetitionSrc(out.toDataURL());
+                } catch (e) {
+                  setRepetitionSrc(null);
+                }
+              }}
+            />
+          )} */}
 
           {repetitionSrc && (
             <Box sx={{ marginTop: 2 }}>
