@@ -1,27 +1,10 @@
-function EncodeRepetition(
-  image: HTMLCanvasElement | ImageData | HTMLImageElement | null
-): HTMLCanvasElement {
+function EncodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
 
   if (image instanceof HTMLCanvasElement) {
     srcCanvas = image;
   } else {
-    srcCanvas = document.createElement("canvas");
-    const ctx = srcCanvas.getContext("2d")!;
-
-    if ((image as ImageData).data && (image as ImageData).width) {
-      const imgData = image as ImageData;
-      srcCanvas.width = imgData.width;
-      srcCanvas.height = imgData.height;
-      ctx.putImageData(imgData, 0, 0);
-    } else if (image === null) {
-      throw new Error("No image provided to EncodeRepetition");
-    } else {
-      const imgEl = image as HTMLImageElement;
-      srcCanvas.width = imgEl.naturalWidth || imgEl.width;
-      srcCanvas.height = imgEl.naturalHeight || imgEl.height;
-      ctx.drawImage(imgEl, 0, 0);
-    }
+    throw new Error("No image provided to EncodeRepetition");
   }
 
   const tileX = 3;

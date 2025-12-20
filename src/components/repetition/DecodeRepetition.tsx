@@ -1,5 +1,4 @@
-
-function EncodeRepetition(
+function DecodeRepetition(
   image: HTMLCanvasElement | ImageData | HTMLImageElement
 ): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
@@ -7,20 +6,7 @@ function EncodeRepetition(
   if (image instanceof HTMLCanvasElement) {
     srcCanvas = image;
   } else {
-    srcCanvas = document.createElement("canvas");
-    const ctx = srcCanvas.getContext("2d")!;
-
-    if ((image as ImageData).data && (image as ImageData).width) {
-      const imgData = image as ImageData;
-      srcCanvas.width = imgData.width;
-      srcCanvas.height = imgData.height;
-      ctx.putImageData(imgData, 0, 0);
-    } else {
-      const imgEl = image as HTMLImageElement;
-      srcCanvas.width = imgEl.naturalWidth || imgEl.width;
-      srcCanvas.height = imgEl.naturalHeight || imgEl.height;
-      ctx.drawImage(imgEl, 0, 0);
-    }
+    throw new Error("No image provided to DecodeRepetition");
   }
 
   const tileX = 3;
@@ -39,4 +25,4 @@ function EncodeRepetition(
   return out;
 }
 
-export default EncodeRepetition;
+export default DecodeRepetition;
