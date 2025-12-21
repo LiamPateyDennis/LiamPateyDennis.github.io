@@ -1,4 +1,5 @@
 import ConvertToBinary from "../../conversions/ConvertToBinary";
+import ConvertToImage from "../../conversions/ConvertToImage";
 
 function DecodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
@@ -25,13 +26,15 @@ function DecodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
         (binaryArray[y][x] +
           binaryArray[y][x + unitWidth] +
           binaryArray[y][x + 2 * unitWidth]) %
-          3 !==
-        0
-      )
+          3 ===
+        1
+          ? (binaryArray[y][x] = 0)
+          : (binaryArray[y][x] = 1);
       }
     }
   }
 
+  const out = ConvertToImage(binaryArray);
   return out;
 }
 

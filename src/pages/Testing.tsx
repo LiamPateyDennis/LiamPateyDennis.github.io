@@ -86,6 +86,7 @@ function Testing() {
                 let encoded = setEncode(canvas);
                 let outNoise = setNoise(encoded);
                 let outAddedNoise = setAddNoise(encoded, outNoise);
+                setDecode(outAddedNoise);
               }}
             />
           )}
@@ -107,6 +108,15 @@ function Testing() {
             <Box sx={{ marginTop: 2 }}>
               <img
                 src={addedNoiseSrc}
+                alt="inverted"
+                style={{ maxWidth: "100%" }}
+              />
+            </Box>
+          )}
+          {decodedSrc && (
+            <Box sx={{ marginTop: 2 }}>
+              <img
+                src={decodedSrc}
                 alt="inverted"
                 style={{ maxWidth: "100%" }}
               />
