@@ -1,4 +1,4 @@
-function EncodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
+function EncodeRepetition(image: HTMLCanvasElement | null) {
   let srcCanvas: HTMLCanvasElement;
 
   if (image instanceof HTMLCanvasElement) {

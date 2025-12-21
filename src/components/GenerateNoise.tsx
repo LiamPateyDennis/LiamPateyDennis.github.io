@@ -1,34 +1,31 @@
-function GenerateNoise(image: HTMLCanvasElement | null, noise: number) {
-  let srcCanvas: HTMLCanvasElement;
+import ConvertToBinary from "../conversions/ConvertToBinary";
+import ConvertToImage from "../conversions/ConvertToImage";
 
-  if (image instanceof HTMLCanvasElement) {
-    srcCanvas = image;
-  } else {
-    throw new Error("No image provided to GenerateNoise");
+// @param HTMLCanvasElement - The input image to add noise to
+// @param noise - The amount of noise to add (0 to 1)
+// @returns HTMLCanvasElement - Returns a new image the same size of just the noise.
+
+function GenerateNoise(image: HTMLCanvasElement | null, noise: number) {
+  if (image === null) {
+    throw new Error("No image provided to AddNoise");
   }
 
-  const out = document.createElement("canvas");
-  out.width = srcCanvas.width;
-  out.height = srcCanvas.height;
-  const outCtx = out.getContext("2d")!;
-
-  const imageData = outCtx.getImageData(0, 0, out.width, out.height);
-  const data = imageData.data;
-
-  console.log(out.width, out.height);
-  console.log(data.length);
+  const binaryArray: number[][] = Array.from({ length: image.height }, () =>
+    Array(image.width).fill(0)
+  );
 
   // Generate Random Number of White Pixels
-  for (let GenNum = 0; GenNum < noise * data.length; GenNum++) {
-    let rngIndex: number = Math.floor(Math.random() * data.length);
-    rngIndex = rngIndex - (rngIndex % 4); // align to pixel start
-    data[rngIndex] = 255;
-    data[rngIndex + 1] = 255;
-    data[rngIndex + 2] = 255;
-    data[rngIndex + 3] = 255;
-    // preserve alpha channel (data[rngIndex+3])
+  for (let i = 0; i < noise * image.width * image.height; i++) {
+    const x: number = Math.floor(Math.random() * image.width);
+    const y: number = Math.floor(Math.random() * image.height);
+    if (binaryArray[y][x] === 0) {
+      binaryArray[y][x] = 1;
+    } else {
+      binaryArray[y][x] = 0;
+    }
   }
-  outCtx.putImageData(imageData, 0, 0);
+
+  const out = ConvertToImage(binaryArray);
   return out;
 }
 

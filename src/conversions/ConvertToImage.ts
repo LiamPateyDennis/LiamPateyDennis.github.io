@@ -1,29 +1,31 @@
 // @param 2d binary array
 // @returns HTMLCanvasElement - The input image to convert
 
-function ConvertToBinary(binaryArray: number[][]){
+function ConvertToImage(binaryArray: number[][]) {
+  const height = binaryArray.length;
+  const width = height > 0 ? binaryArray[0].length : 0;
 
   const out = document.createElement("canvas");
-  out.width = binaryArray[0].length;
-  out.height = binaryArray.length;
+  out.width = width;
+  out.height = height;
   const outCtx = out.getContext("2d")!;
 
-  const imageData = outCtx.getImageData(0, 0, out.width, out.height);
+  const imageData = outCtx.createImageData(width, height);
   const data = imageData.data;
 
-//   let binaryArray: number[][] = [];
-
-  for (let y = 0; y < out.height; y++) {
-    for (let x = 0; x < out.width; x++) {
-        data[(y * out.width + x) * 4] = binaryArray[y][x] === 1 ? 255 : 0;        // Red
-        data[(y * out.width + x) * 4 + 1] = binaryArray[y][x] === 1 ? 255 : 0;    // Green
-        data[(y * out.width + x) * 4 + 2] = binaryArray[y][x] === 1 ? 255 : 0;    // Blue
-        data[(y * out.width + x) * 4 + 3] = 255;                                  // Alpha
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const v = binaryArray[y][x] === 1 ? 255 : 0;
+      const idx = (y * width + x) * 4;
+      data[idx] = v;
+      data[idx + 1] = v;
+      data[idx + 2] = v;
+      data[idx + 3] = 255;
     }
-    }   
-return imageData;
+  }
 
+  outCtx.putImageData(imageData, 0, 0);
+  return out;
 }
-  
 
-export default ConvertToBinary;
+export default ConvertToImage;

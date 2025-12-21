@@ -9,14 +9,69 @@ import BlackWhiteImage from "../components/BlackWhiteImage";
 import React from "react";
 import EncodeRepetition from "../components/repetition/EncodeRepetition";
 import GenerateNoise from "../components/GenerateNoise";
-import ConvertToBinary from "../components/ConvertToBinary";
+// import ConvertToBinary from "../conversions/ConvertToBinary";
+import AddNoise from "../components/AddNoise";
+import DecodeRepetition from "../components/repetition/DecodeRepetition";
 
 function Testing() {
   const [imageSrc, setImageSrc] = React.useState<string | null>(null);
   const [repetitionSrc, setRepetitionSrc] = React.useState<string | null>(null);
   const [noiseSrc, setNoiseSrc] = React.useState<string | null>(null);
+  const [addedNoiseSrc, setAddedNoiseSrc] = React.useState<string | null>(null);
+  const [decodedSrc, setDecodedSrc] = React.useState<string | null>(null);
+  // const [encoded, setEncoded] = React.useState<HTMLCanvasElement | null>(null);
 
-  let encoded: HTMLCanvasElement | null = null;
+  const setEncode = (
+    canvas: HTMLCanvasElement | null
+  ): HTMLCanvasElement | null => {
+    try {
+      let out = EncodeRepetition(canvas);
+      setRepetitionSrc(out.toDataURL());
+      return out;
+    } catch (e) {
+      setRepetitionSrc(null);
+      return null;
+    }
+  };
+
+  const setNoise = (
+    canvas: HTMLCanvasElement | null,
+    noiseAmount = 0.005
+  ): HTMLCanvasElement | null => {
+    try {
+      let outNoise = GenerateNoise(canvas, noiseAmount);
+      setNoiseSrc(outNoise.toDataURL());
+      return outNoise;
+    } catch (e) {
+      setNoiseSrc(null);
+      return null;
+    }
+  };
+
+  const setAddNoise = (
+    canvas: HTMLCanvasElement | null,
+    canvas2: HTMLCanvasElement | null
+  ) => {
+    try {
+      let outAddedNoise = AddNoise(canvas, canvas2);
+      setAddedNoiseSrc(outAddedNoise.toDataURL());
+      return outAddedNoise;
+    } catch (e) {
+      setAddedNoiseSrc(null);
+      return null;
+    }
+  };
+
+  const setDecode = (canvas: HTMLCanvasElement | null) => {
+    try {
+      let decodedImage = DecodeRepetition(canvas);
+      setDecodedSrc(decodedImage.toDataURL());
+      return decodedImage;
+    } catch (e) {
+      setDecodedSrc(null);
+      return null;
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -28,35 +83,12 @@ function Testing() {
             <BlackWhiteImage
               src={imageSrc}
               onCanvas={(canvas) => {
-                try {
-                  encoded = EncodeRepetition(canvas);
-                  setRepetitionSrc(encoded.toDataURL());
-                } catch (e) {
-                  setRepetitionSrc(null);
-                }
-                try {
-                  const outNoise = GenerateNoise(encoded, 0.005);
-                  setNoiseSrc(outNoise.toDataURL());
-                } catch (e) {
-                  setNoiseSrc(null);
-                }
+                let encoded = setEncode(canvas);
+                let outNoise = setNoise(encoded);
+                let outAddedNoise = setAddNoise(encoded, outNoise);
               }}
             />
           )}
-          {/* {imageSrc && (
-            <ConvertToBinary
-              src={imageSrc}
-              onCanvas={(canvas) => {
-                try {
-                  const out = EncodeRepetition(canvas);
-                  setRepetitionSrc(out.toDataURL());
-                } catch (e) {
-                  setRepetitionSrc(null);
-                }
-              }}
-            />
-          )} */}
-
           {repetitionSrc && (
             <Box sx={{ marginTop: 2 }}>
               <img
@@ -69,6 +101,15 @@ function Testing() {
           {noiseSrc && (
             <Box sx={{ marginTop: 2 }}>
               <img src={noiseSrc} alt="inverted" style={{ maxWidth: "100%" }} />
+            </Box>
+          )}
+          {addedNoiseSrc && (
+            <Box sx={{ marginTop: 2 }}>
+              <img
+                src={addedNoiseSrc}
+                alt="inverted"
+                style={{ maxWidth: "100%" }}
+              />
             </Box>
           )}
         </Box>

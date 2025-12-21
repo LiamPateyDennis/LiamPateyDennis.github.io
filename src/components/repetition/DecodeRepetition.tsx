@@ -1,6 +1,6 @@
-function DecodeRepetition(
-  image: HTMLCanvasElement | ImageData | HTMLImageElement
-): HTMLCanvasElement {
+import ConvertToBinary from "../../conversions/ConvertToBinary";
+
+function DecodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
   let srcCanvas: HTMLCanvasElement;
 
   if (image instanceof HTMLCanvasElement) {
@@ -9,16 +9,26 @@ function DecodeRepetition(
     throw new Error("No image provided to DecodeRepetition");
   }
 
-  const tileX = 3;
-  const tileY = 1;
-  const out = document.createElement("canvas");
-  out.width = srcCanvas.width * tileX;
-  out.height = srcCanvas.height * tileY;
-  const outCtx = out.getContext("2d")!;
+  const binaryArray = ConvertToBinary(srcCanvas);
 
-  for (let y = 0; y < tileY; y++) {
-    for (let x = 0; x < tileX; x++) {
-      outCtx.drawImage(srcCanvas, x * srcCanvas.width, y * srcCanvas.height);
+  const unitWidth = srcCanvas.width / 3;
+
+  for (let y = 0; y < srcCanvas.height; y++) {
+    for (let x = 0; x < unitWidth; x++) {
+      if (
+        (binaryArray[y][x] +
+          binaryArray[y][x + unitWidth] +
+          binaryArray[y][x + 2 * unitWidth]) %
+          3 !==
+        0
+      ) {
+        (binaryArray[y][x] +
+          binaryArray[y][x + unitWidth] +
+          binaryArray[y][x + 2 * unitWidth]) %
+          3 !==
+        0
+      )
+      }
     }
   }
 
