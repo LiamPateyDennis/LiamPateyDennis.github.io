@@ -11,8 +11,18 @@ function DecodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
   }
 
   const binaryArray = ConvertToBinary(srcCanvas);
-
   const unitWidth = srcCanvas.width / 3;
+
+  const RepCorrect = (
+    setBinary: number,
+    UnitWidth: number,
+    x: number,
+    y: number
+  ) => {
+    binaryArray[y][x] = setBinary;
+    binaryArray[y][x + UnitWidth] = setBinary;
+    binaryArray[y][x + 2 * UnitWidth] = setBinary;
+  };
 
   for (let y = 0; y < srcCanvas.height; y++) {
     for (let x = 0; x < unitWidth; x++) {
@@ -28,8 +38,8 @@ function DecodeRepetition(image: HTMLCanvasElement | null): HTMLCanvasElement {
           binaryArray[y][x + 2 * unitWidth]) %
           3 ===
         1
-          ? (binaryArray[y][x] = 0)
-          : (binaryArray[y][x] = 1);
+          ? RepCorrect(0, unitWidth, x, y)
+          : RepCorrect(1, unitWidth, x, y);
       }
     }
   }
