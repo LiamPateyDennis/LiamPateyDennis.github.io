@@ -19,7 +19,6 @@ function Testing() {
   const [noiseSrc, setNoiseSrc] = React.useState<string | null>(null);
   const [addedNoiseSrc, setAddedNoiseSrc] = React.useState<string | null>(null);
   const [decodedSrc, setDecodedSrc] = React.useState<string | null>(null);
-  // const [encoded, setEncoded] = React.useState<HTMLCanvasElement | null>(null);
 
   const setEncode = (
     canvas: HTMLCanvasElement | null
@@ -36,7 +35,7 @@ function Testing() {
 
   const setNoise = (
     canvas: HTMLCanvasElement | null,
-    noiseAmount = 0.005
+    noiseAmount = 0.001
   ): HTMLCanvasElement | null => {
     try {
       let outNoise = GenerateNoise(canvas, noiseAmount);
